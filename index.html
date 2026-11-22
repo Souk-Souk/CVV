@@ -21,7 +21,7 @@
       --warning: #d97706;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
       font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -100,8 +100,6 @@
     .btn-danger:hover { background: #b91c1c; }
     .btn-warning { background: #f59e0b; color: #0f172a; }
     .btn-warning:hover { background: #d97706; color: #fff; }
-    .btn-ai { background: linear-gradient(135deg, #4f46e5, #0284c7); color: #fff; }
-    .btn-ai:hover:not(:disabled) { filter: brightness(1.08); }
     .btn-sm { padding: 5px 10px; font-size: 0.78rem; border-radius: 6px; }
 
     /* Auth Gate */
@@ -372,36 +370,12 @@
       transform: scale(1.08);
     }
 
-    .summary-toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 6px;
-    }
-    .summary-status {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-    .ai-result-box {
-      margin-top: 8px;
-      background: #f8fafc;
-      border: 1px solid #c7d2fe;
-      border-radius: 8px;
-      padding: 10px;
-      font-size: 0.82rem;
-      color: #1e293b;
-    }
-
     .repeater-item {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 8px;
       padding: 11px;
       margin-bottom: 10px;
-      position: relative;
     }
     .repeater-header {
       display: flex;
@@ -413,7 +387,7 @@
       color: #475569;
     }
 
-    /* A4 Preview Container - Responsive & Unclipped */
+    /* A4 Preview Container */
     .preview-shell {
       background: #cbd5e1;
       border-radius: 12px;
@@ -887,54 +861,7 @@
       box-shadow: 0 20px 40px rgba(0,0,0,0.25);
     }
 
-    /* Fullscreen Print Preview Modal */
-    .print-modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.82);
-      z-index: 75;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 14px;
-      overflow-y: auto;
-    }
-    .print-modal-bar {
-      width: 100%;
-      max-width: 794px;
-      background: #0f172a;
-      color: #ffffff;
-      border-radius: 10px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-    }
-    .print-modal-stage {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      overflow-x: auto;
-      padding-bottom: 24px;
-    }
-
-    /* Hidden Print Iframe */
-    #printSandboxFrame {
-      position: fixed;
-      width: 210mm;
-      height: 297mm;
-      left: -9999px;
-      top: 0;
-      border: 0;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* Print Rules - Zero Clipping */
+    /* Print Rules */
     @media print {
       @page {
         size: A4 portrait;
@@ -945,23 +872,8 @@
         margin: 0 !important;
         padding: 0 !important;
       }
-      .topbar, .session-banner, .editor-panel, .preview-toolbar, #authScreen, #adminScreen, #pinModal, .print-modal-bar, .no-print {
+      .topbar, .session-banner, .editor-panel, .preview-toolbar, #authScreen, #adminScreen, #pinModal, .no-print {
         display: none !important;
-      }
-      body.print-modal-open .workspace {
-        display: none !important;
-      }
-      body.print-modal-open #printModal {
-        position: static !important;
-        display: block !important;
-        background: #fff !important;
-        padding: 0 !important;
-        overflow: visible !important;
-      }
-      body.print-modal-open .print-modal-stage {
-        display: block !important;
-        overflow: visible !important;
-        padding: 0 !important;
       }
       .workspace {
         display: block !important;
@@ -1056,7 +968,7 @@
 
         <div class="form-group">
           <label for="loginCode">Code d'accès client *</label>
-          <input type="text" id="loginCode" class="form-control" placeholder="Code" autocomplete="off" required />
+          <input type="text" id="loginCode" class="form-control" placeholder="Ex : CVP-8492" autocomplete="off" required />
         </div>
 
         <button type="submit" class="btn btn-primary" style="width:100%; padding:11px;">Activer et ouvrir mon CV</button>
@@ -1093,12 +1005,11 @@
         </div>
       </div>
 
-      <!-- Single-Line Navigation for Profil, Expériences, Formations, Personnes ressources -->
       <nav class="quick-sections-bar" aria-label="Accès rapide aux sections">
         <button type="button" class="quick-sec-btn" onclick="jumpToSection('secProfil', this)">Profil</button>
         <button type="button" class="quick-sec-btn" onclick="jumpToSection('secExperiences', this)">Expériences</button>
         <button type="button" class="quick-sec-btn" onclick="jumpToSection('secFormations', this)">Formations</button>
-        <button type="button" class="quick-sec-btn" onclick="jumpToSection('secReferences', this)">Personnes ressources</button>
+        <button type="button" class="quick-sec-btn" onclick="jumpToSection('secReferences', this)">Références</button>
       </nav>
 
       <div class="section-title">
@@ -1118,1027 +1029,544 @@
         <div class="form-group">
           <label>Couleur principale</label>
           <div class="swatch-row" id="colorSwatches">
-            <button type="button" class="swatch active" style="background:#1e3a8a" data-color="#1e3a8a" data-light="#eff6ff" onclick="selectColor(this)"></button>
-            <button type="button" class="swatch" style="background:#0f766e" data-color="#0f766e" data-light="#f0fdfa" onclick="selectColor(this)"></button>
-            <button type="button" class="swatch" style="background:#1e293b" data-color="#1e293b" data-light="#f1f5f9" onclick="selectColor(this)"></button>
-            <button type="button" class="swatch" style="background:#7c2d12" data-color="#7c2d12" data-light="#fff7ed" onclick="selectColor(this)"></button>
-            <button type="button" class="swatch" style="background:#312e81" data-color="#312e81" data-light="#eef2ff" onclick="selectColor(this)"></button>
+            <button type="button" class="swatch active" data-color="#1e3a8a" style="background:#1e3a8a;" onclick="selectColor('#1e3a8a', this)" aria-label="Bleu marine"></button>
+            <button type="button" class="swatch" data-color="#0f766e" style="background:#0f766e;" onclick="selectColor('#0f766e', this)" aria-label="Vert canard"></button>
+            <button type="button" class="swatch" data-color="#7c2d12" style="background:#7c2d12;" onclick="selectColor('#7c2d12', this)" aria-label="Bordeaux"></button>
+            <button type="button" class="swatch" data-color="#334155" style="background:#334155;" onclick="selectColor('#334155', this)" aria-label="Ardoise"></button>
+            <button type="button" class="swatch" data-color="#4338ca" style="background:#4338ca;" onclick="selectColor('#4338ca', this)" aria-label="Indigo"></button>
           </div>
         </div>
       </div>
 
-      <div class="section-title">
-        <span>2. Photo de profil</span>
-      </div>
-      <div class="form-group" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-        <input type="file" id="photoInput" accept="image/*" class="form-control" style="flex:1;" onchange="handlePhotoUpload(event)" />
-        <button type="button" class="btn btn-secondary btn-sm" onclick="removePhoto()">Retirer</button>
-      </div>
-      <label style="font-size:0.82rem; display:flex; align-items:center; gap:6px; margin-bottom:8px; cursor:pointer;">
-        <input type="checkbox" id="showPhoto" checked onchange="updateCV()" /> Afficher la photo sur le CV
-      </label>
-
       <div id="secProfil" class="section-title">
-        <span>3. Profil, Identité & Coordonnées</span>
-      </div>
-      <div class="form-group">
-        <label for="cvFullName">Identité verrouillée (NOM Prénom)</label>
-        <input type="text" id="cvFullName" class="form-control" readonly />
-      </div>
-      <div class="form-group">
-        <label for="cvJobTitle">Titre du poste / Profil recherché</label>
-        <input type="text" id="cvJobTitle" class="form-control" placeholder="Ex : Responsable Administratif et Financier" oninput="onProfileInputChanged()" />
+        <span>2. Identité & Profil</span>
       </div>
       <div class="grid-2">
         <div class="form-group">
-          <label for="cvPhone">Téléphone</label>
-          <input type="text" id="cvPhone" class="form-control" placeholder="+226 70 45 82 19" oninput="updateCV()" />
+          <label for="cvNom">Nom (verrouillé)</label>
+          <input type="text" id="cvNom" class="form-control" readonly />
+        </div>
+        <div class="form-group">
+          <label for="cvPrenom">Prénom (verrouillé)</label>
+          <input type="text" id="cvPrenom" class="form-control" readonly />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="cvTitre">Poste visé / Titre professionnel</label>
+        <input type="text" id="cvTitre" class="form-control" placeholder="Ex : Chargé de Projet & Gestion Administrative" oninput="updateCV()" />
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="cvTel">Téléphone</label>
+          <input type="text" id="cvTel" class="form-control" placeholder="+226 70 00 00 00" oninput="updateCV()" />
         </div>
         <div class="form-group">
           <label for="cvEmail">Email</label>
-          <input type="email" id="cvEmail" class="form-control" placeholder="karim.ouedraogo.exemple@gmail.com" oninput="updateCV()" />
+          <input type="email" id="cvEmail" class="form-control" placeholder="nom.prenom@email.com" oninput="updateCV()" />
         </div>
       </div>
+
       <div class="grid-2">
         <div class="form-group">
-          <label for="cvAddress">Ville / Adresse</label>
-          <input type="text" id="cvAddress" class="form-control" placeholder="Ouagadougou, Burkina Faso" oninput="updateCV()" />
+          <label for="cvVille">Ville / Pays</label>
+          <input type="text" id="cvVille" class="form-control" placeholder="Ex : Bobo-Dioulasso, Burkina Faso" oninput="updateCV()" />
         </div>
         <div class="form-group">
-          <label for="cvExtraInfo">Permis / Disponibilité</label>
-          <input type="text" id="cvExtraInfo" class="form-control" placeholder="Permis B" oninput="updateCV()" />
+          <label for="cvPhoto">Photo d'identité</label>
+          <input type="file" id="cvPhoto" class="form-control" accept="image/*" onchange="handlePhotoUpload(event)" />
         </div>
       </div>
 
       <div class="form-group">
-        <div class="summary-toolbar">
-          <label for="cvSummary" style="margin-bottom:0;">Résumé du profil professionnel</label>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button type="button" class="btn btn-secondary btn-sm" onclick="regenerateAutoSummary()">Générer auto</button>
-            <button type="button" id="btnAiSummary" class="btn btn-ai btn-sm" onclick="improveSummaryWithAI()">Améliorer avec IA</button>
-          </div>
-        </div>
-        <textarea id="cvSummary" rows="4" class="form-control" placeholder="Le résumé se génère automatiquement et reste entièrement modifiable à tout moment..." oninput="onSummaryManualEdit()"></textarea>
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-top:5px;">
-          <label style="font-size:0.78rem; color:#475569; display:flex; align-items:center; gap:5px; cursor:pointer;">
-            <input type="checkbox" id="autoSummarySync" checked onchange="toggleAutoSummarySync()" />
-            Mise à jour automatique si non modifié manuellement
-          </label>
-          <span id="summaryModeBadge" class="summary-status" style="margin-top:0;">Mode auto</span>
-        </div>
-        <div id="aiSummaryBox" class="ai-result-box hidden">
-          <div style="font-weight:700; color:#312e81; margin-bottom:4px;">Proposition IA pour le résumé :</div>
-          <div id="aiSummarySuggestion" style="white-space:pre-line; margin-bottom:8px;"></div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button type="button" class="btn btn-success btn-sm" onclick="applyAISummarySuggestion()">Appliquer au résumé</button>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="dismissAISummarySuggestion()">Conserver mon texte</button>
-          </div>
-        </div>
+        <label for="cvResume">Résumé professionnel</label>
+        <textarea id="cvResume" class="form-control" rows="4" placeholder="Présentez vos points forts, années d'expérience et objectifs..." oninput="updateCV()"></textarea>
       </div>
 
       <div id="secExperiences" class="section-title">
-        <span>4. Expériences professionnelles</span>
-        <button type="button" class="btn btn-primary btn-sm" onclick="addRepeater('exp')">+ Ajouter</button>
+        <span>3. Expériences professionnelles</span>
+        <button type="button" class="btn btn-primary btn-sm" onclick="addExperience()">+ Ajouter</button>
       </div>
-      <div id="expList"></div>
+      <div id="experiencesList"></div>
 
       <div id="secFormations" class="section-title">
-        <span>5. Formations & Diplômes</span>
-        <button type="button" class="btn btn-primary btn-sm" onclick="addRepeater('edu')">+ Ajouter</button>
+        <span>4. Formations & Diplômes</span>
+        <button type="button" class="btn btn-primary btn-sm" onclick="addEducation()">+ Ajouter</button>
       </div>
-      <div id="eduList"></div>
+      <div id="educationsList"></div>
 
       <div class="section-title">
-        <span>6. Compétences, Langues & Intérêts</span>
+        <span>5. Compétences & Langues</span>
       </div>
       <div class="form-group">
         <label for="cvSkills">Compétences (séparées par des virgules)</label>
-        <input type="text" id="cvSkills" class="form-control" placeholder="Gestion budgétaire, Analyse financière, Excel avancé" oninput="onProfileInputChanged()" />
+        <input type="text" id="cvSkills" class="form-control" placeholder="Ex : Gestion de projet, Excel avancé, Relation client" oninput="updateCV()" />
       </div>
       <div class="form-group">
         <label for="cvLanguages">Langues (séparées par des virgules)</label>
-        <input type="text" id="cvLanguages" class="form-control" placeholder="Français - Courant, Mooré - Courant" oninput="updateCV()" />
-      </div>
-      <div class="form-group">
-        <label for="cvInterests">Centres d'intérêt (séparés par des virgules)</label>
-        <input type="text" id="cvInterests" class="form-control" placeholder="Lecture économique, Course à pied" oninput="updateCV()" />
+        <input type="text" id="cvLanguages" class="form-control" placeholder="Ex : Français (Courant), Anglais (Intermédiaire), Mooré" oninput="updateCV()" />
       </div>
 
       <div id="secReferences" class="section-title">
-        <span>7. Personnes ressources / Références</span>
-        <button type="button" class="btn btn-primary btn-sm" onclick="addRepeater('ref')">+ Ajouter</button>
+        <span>6. Personnes ressources / Références</span>
+        <button type="button" class="btn btn-primary btn-sm" onclick="addReference()">+ Ajouter</button>
       </div>
-      <div id="refList"></div>
-
-      <div style="margin-top:18px; display:flex; gap:8px; flex-wrap:wrap;">
-        <button type="button" class="btn btn-primary" onclick="fillSampleCV()">Remplir un exemple</button>
-        <button type="button" class="btn btn-primary" style="flex:1;" onclick="downloadPdfCV()">Télécharger PDF</button>
-        <button type="button" class="btn btn-success" style="flex:1;" onclick="printCV()">Imprimer</button>
-        <button type="button" class="btn btn-secondary" onclick="resetCVFields()">Vider les champs</button>
-      </div>
+      <div id="referencesList"></div>
     </div>
 
     <!-- Right A4 Live Preview -->
-    <div id="previewShell" class="preview-shell">
+    <div id="previewPanel" class="preview-shell">
       <div class="preview-toolbar no-print">
-        <span>Aperçu A4 en direct</span>
+        <span>Aperçu en temps réel — Format A4 (210 × 297 mm)</span>
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
-          <button type="button" class="btn btn-secondary btn-sm" onclick="scrollToEditor()">Retour au formulaire</button>
           <button type="button" class="btn btn-primary btn-sm" onclick="downloadPdfCV()">Télécharger PDF</button>
           <button type="button" class="btn btn-success btn-sm" onclick="printCV()">Imprimer</button>
         </div>
       </div>
-      <div id="cvPreview" class="a4-page tpl-cabinet-left"></div>
+      <div id="cvPreviewPage" class="a4-page"></div>
     </div>
   </section>
 
-  <!-- Administrator Console -->
-  <section id="adminScreen" class="admin-container hidden">
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
-      <div>
-        <h2 style="font-size:1.35rem;">Console Administrateur — CV Studio Pro</h2>
-        <p style="font-size:0.86rem; color:var(--muted);">Gestion des codes clients (1 code = 1 client • validité 24h), dates de création et révocation immédiate.</p>
-      </div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button class="btn btn-primary" onclick="generateNewCode()">+ Générer 1 code</button>
-        <button class="btn btn-secondary" onclick="generateBatchCodes(5)">+ Générer 5 codes</button>
-        <button class="btn btn-secondary" onclick="exportCodesTXT()">Export .TXT</button>
-        <button class="btn btn-secondary" onclick="exportCodesCSV()">Export .CSV</button>
-      </div>
-    </div>
-
-    <div id="lastGeneratedBox" class="alert alert-success hidden" style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
-      <div>
-        <strong>Dernier(s) code(s) généré(s) :</strong> <span id="lastGeneratedText" style="font-family:monospace; font-size:0.95rem;"></span>
-      </div>
-      <button class="btn btn-success btn-sm" onclick="copyLastGenerated()">Copier pour envoi client</button>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-label">Total codes enregistrés</div>
-        <div class="stat-val" id="statTotal">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Disponibles (non attribués)</div>
-        <div class="stat-val" id="statAvailable" style="color:#16a34a;">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Actifs (en cours 24h)</div>
-        <div class="stat-val" id="statActive" style="color:#2563eb;">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Expirés (+24h)</div>
-        <div class="stat-val" id="statExpired" style="color:#dc2626;">0</div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-bottom:18px; padding:16px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-        <div style="flex:1; min-width:220px;">
-          <input type="text" id="adminSearch" class="form-control" placeholder="Rechercher par nom client, téléphone ou statut..." oninput="renderAdminTable()" />
+  <!-- Admin Console -->
+  <section id="adminScreen" class="admin-container hidden no-print">
+    <div class="card" style="margin-bottom:18px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+        <div>
+          <h2 style="font-size:1.3rem; color:#0f172a;">Administration — Codes Clients (24 h)</h2>
+          <p style="font-size:0.86rem; color:var(--muted);">Générez, suivez et renouvelez les codes d'accès synchronisés avec Google Sheets.</p>
         </div>
-        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-          <input type="password" id="newPinInput" class="form-control" style="width:165px;" placeholder="Nouveau PIN (4-8 chiffres)" maxlength="8" />
-          <button class="btn btn-secondary btn-sm" onclick="changeAdminPin()">Changer le PIN</button>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="syncCodesFromSheet(true)">Actualiser (Sheets)</button>
+          <button type="button" class="btn btn-primary" onclick="generateNewCode()">+ Générer 1 code</button>
         </div>
       </div>
-    </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Code d'accès client</th>
-            <th>Date de création</th>
-            <th>Statut</th>
-            <th>Client attribué</th>
-            <th>Téléphone dépôt</th>
-            <th>Expiration / Temps restant</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="adminTableBody"></tbody>
-      </table>
+      <div class="form-group" style="margin-bottom:14px;">
+        <label for="adminSyncUrl">URL Google Apps Script (Web App /exec)</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input type="url" id="adminSyncUrl" class="form-control" style="flex:1; min-width:240px;" placeholder="https://script.google.com/macros/s/.../exec" />
+          <button type="button" class="btn btn-success btn-sm" onclick="saveSyncUrl()">Enregistrer l'URL</button>
+        </div>
+      </div>
+
+      <div id="adminNotice" class="alert alert-success hidden"></div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total codes</div>
+          <div class="stat-val" id="statTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Disponibles (non activés)</div>
+          <div class="stat-val" id="statAvailable" style="color:#1d4ed8;">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Actifs (24 h en cours)</div>
+          <div class="stat-val" id="statActive" style="color:#16a34a;">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Expirés</div>
+          <div class="stat-val" id="statExpired" style="color:#dc2626;">0</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Statut</th>
+              <th>Client (NOM Prénom)</th>
+              <th>Tél. dépôt</th>
+              <th>Expiration (24h)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminCodesTbody"></tbody>
+        </table>
+      </div>
     </div>
   </section>
 
   <!-- Admin PIN Modal -->
-  <div id="pinModal" class="modal-backdrop hidden">
+  <div id="pinModal" class="modal-backdrop hidden no-print">
     <div class="modal-box">
-      <h3 style="margin-bottom:6px;">Accès Administrateur</h3>
-      <p style="font-size:0.84rem; color:var(--muted); margin-bottom:14px;">Saisissez votre code PIN administrateur pour gérer les accès clients.</p>
-      <div id="pinError" class="alert alert-error hidden">Code PIN incorrect.</div>
-      <div class="form-group">
-        <label for="pinInput">Code PIN</label>
-        <input type="password" id="pinInput" class="form-control" placeholder="••••" onkeydown="if(event.key==='Enter') verifyAdminPin()" />
-      </div>
-      <div style="display:flex; justify-content:flex-end; gap:8px;">
-        <button type="button" class="btn btn-secondary" onclick="closePinModal()">Annuler</button>
-        <button type="button" class="btn btn-primary" onclick="verifyAdminPin()">Entrer</button>
-      </div>
+      <h3 style="font-size:1.1rem; margin-bottom:6px;">Accès Administration</h3>
+      <p style="font-size:0.84rem; color:var(--muted); margin-bottom:14px;">Entrez votre code PIN administrateur pour gérer les codes clients.</p>
+      <div id="pinError" class="alert alert-error hidden">PIN incorrect. Réessayez.</div>
+      <form onsubmit="verifyAdminPin(event)">
+        <div class="form-group">
+          <label for="adminPinInput">Code PIN</label>
+          <input type="password" id="adminPinInput" class="form-control" placeholder="••••" required />
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:8px;">
+          <button type="button" class="btn btn-secondary" onclick="closePinModal()">Annuler</button>
+          <button type="submit" class="btn btn-primary">Valider</button>
+        </div>
+      </form>
     </div>
   </div>
-
-  <!-- Full-Screen Print Preview Modal -->
-  <div id="printModal" class="print-modal-backdrop hidden no-print" role="dialog" aria-modal="true" aria-label="Aperçu avant impression">
-    <div class="print-modal-bar">
-      <div>
-        <strong style="font-size:0.92rem;">Aperçu d'impression A4</strong>
-        <div id="printModalHint" style="font-size:0.75rem; color:#cbd5e1;">Vérifiez la mise en page puis cliquez sur « Lancer l'impression ».</div>
-      </div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button type="button" class="btn btn-success btn-sm" onclick="launchPrintFromModal()">Lancer l'impression</button>
-        <button type="button" class="btn btn-primary btn-sm" onclick="fallbackPrintToPdf()">Enregistrer en PDF</button>
-        <button type="button" class="btn btn-secondary btn-sm" onclick="closePrintPreviewOverlay()">Fermer</button>
-      </div>
-    </div>
-    <div id="printModalStage" class="print-modal-stage"></div>
-  </div>
-
-  <!-- Dedicated Isolated Print Frame -->
-  <iframe id="printSandboxFrame" title="Zone d'impression A4"></iframe>
 
   <script>
+    // Collez ici l'URL complète de votre Web App Google Apps Script (terminant par /exec)
+    const DEFAULT_SYNC_URL = '';
+    const ADMIN_PIN = '2190';
+    const DAY_MS = 24 * 60 * 60 * 1000;
+
     const STORAGE_KEYS = {
       CODES: 'cvsp_codes_v1',
-      SESSION: 'cvsp_active_session_v1',
-      PIN: 'cvsp_admin_pin_v1',
-      CV_DATA: 'cvsp_cv_data_v1'
+      SESSION: 'cvsp_client_session_v1',
+      SYNC_URL: 'cvsp_sync_url_v1'
     };
 
-    const DAY_MS = 24 * 60 * 60 * 1000;
-    const DEFAULT_PIN = '2190';
-    let lastGeneratedCodes = [];
-    let sessionInterval = null;
-    let pendingAISummaryText = '';
+    let codesCache = [];
+    let currentSession = null;
+    let isAdminUnlocked = false;
+    let photoDataUrl = '';
+    let selectedColor = '#1e3a8a';
 
-    let cvState = {
-      template: 'tpl-cabinet-left',
-      primaryColor: '#1e3a8a',
-      lightColor: '#eff6ff',
-      photo: '',
-      showPhoto: true,
-      fullName: 'OUEDRAOGO Karim Désiré',
-      jobTitle: 'Responsable Administratif et Financier',
-      phone: '+226 70 45 82 19',
-      email: 'karim.ouedraogo.exemple@gmail.com',
-      address: 'Ouagadougou, Burkina Faso',
-      extraInfo: 'Permis B',
-      summaryCustomized: false,
-      autoSummarySync: true,
-      summary: 'Cadre rigoureux et méthodique avec une solide expérience en gestion administrative, contrôle budgétaire et analyse financière. Reconnu pour sa fiabilité, son sens de l’organisation et sa capacité à structurer les processus opérationnels au service de la performance.',
-      experiences: [
-        {
-          role: 'Chargé de Contrôle de Gestion & Administration',
-          company: 'Cabinet Horizon Conseil SA',
-          period: '01/04/2022 - Présent',
-          desc: 'Suivi budgétaire mensuel, élaboration des tableaux de bord de direction et coordination administrative.'
-        },
-        {
-          role: 'Assistant Comptable et Financier',
-          company: 'Entreprise Faso Logistique & Négoce',
-          period: '15/02/2020 - 31/03/2022',
-          desc: 'Rapprochements bancaires, gestion de la trésorerie quotidienne et préparation des états financiers.'
-        },
-        {
-          role: 'Analyste Junior Données & Reporting',
-          company: 'Association Sahel Initiatives',
-          period: '01/09/2018 - 31/01/2020',
-          desc: 'Consolidation des données de projets, contrôle de conformité et rédaction de synthèses d’activité.'
-        }
-      ],
-      educations: [
-        {
-          degree: 'Master en Finance et Contrôle de Gestion',
-          school: 'Université Thomas Sankara, Ouagadougou',
-          year: '2017 - 2018',
-          desc: 'Spécialisation analyse financière et pilotage de la performance.'
-        },
-        {
-          degree: 'Licence en Sciences Économiques et de Gestion',
-          school: 'Université Thomas Sankara, Ouagadougou',
-          year: '2014 - 2017',
-          desc: 'Option Économie d’Entreprise et Gestion.'
-        },
-        {
-          degree: 'Baccalauréat Série D',
-          school: 'Lycée Bogodogo, Ouagadougou',
-          year: '2013 - 2014',
-          desc: ''
-        }
-      ],
-      skills: 'Gestion budgétaire, Analyse financière, Excel avancé, Tableaux de bord, Contrôle interne, Reporting direction, Rédaction administrative',
-      languages: 'Français - Courant, Mooré - Courant, Anglais - Professionnel',
-      interests: 'Lecture économique, Course à pied, Échecs',
-      references: [
-        {
-          name: 'KAFANDO Awa',
-          role: 'Directrice Administrative — Cabinet Horizon Conseil SA (+226 70 18 44 90)'
-        },
-        {
-          name: 'ZONGO Ibrahim',
-          role: 'Chef de Département Finance — Faso Logistique & Négoce (+226 76 32 10 55)'
-        }
-      ]
-    };
+    let experiences = [];
+    let educations = [];
+    let referencesList = [];
 
-    function buildAutoSummary() {
-      const title = normalizeText(document.getElementById('cvJobTitle')?.value || cvState.jobTitle || '');
-      const topEdu = cvState.educations.find(e => e.degree || e.school);
-      const topExp = cvState.experiences.find(e => e.role || e.company);
-      const skillsList = splitTags(document.getElementById('cvSkills')?.value ?? cvState.skills).slice(0, 3);
-
-      const parts = [];
-      if (topEdu?.degree) {
-        parts.push(`Titulaire d’un(e) ${topEdu.degree}`);
-      } else if (title) {
-        parts.push(`Professionnel orienté ${title}`);
-      } else {
-        parts.push('Professionnel rigoureux et polyvalent');
-      }
-
-      parts.push('doté d’un bon esprit d’analyse, d’un sens de l’organisation et d’une forte capacité d’adaptation.');
-
-      if (topExp?.role) {
-        const orgPart = topExp.company ? ` chez ${topExp.company}` : '';
-        parts.push(`Expérimenté notamment en tant que ${topExp.role}${orgPart}.`);
-      }
-
-      if (skillsList.length > 0) {
-        parts.push(`Maîtrise de ${skillsList.join(', ')}.`);
-      }
-
-      if (title) {
-        parts.push(`Souhaite mettre ces atouts au service d’une organisation en tant que ${title}.`);
-      } else {
-        parts.push('Souhaite contribuer activement à la performance et aux objectifs de l’organisation.');
-      }
-
-      return parts.join(' ');
+    function getSyncUrl() {
+      const saved = localStorage.getItem(STORAGE_KEYS.SYNC_URL);
+      return (saved && saved.trim()) ? saved.trim() : DEFAULT_SYNC_URL.trim();
     }
 
-    function updateSummaryBadge() {
-      const badge = document.getElementById('summaryModeBadge');
-      if (!badge) return;
-      if (cvState.summaryCustomized) {
-        badge.textContent = 'Modifié manuellement';
-        badge.style.color = '#1e3a8a';
-      } else if (cvState.autoSummarySync) {
-        badge.textContent = 'Génération auto active';
-        badge.style.color = '#15803d';
-      } else {
-        badge.textContent = 'Sync auto en pause';
-        badge.style.color = '#64748b';
-      }
+    function saveSyncUrl() {
+      const input = document.getElementById('adminSyncUrl');
+      const url = (input.value || '').trim();
+      localStorage.setItem(STORAGE_KEYS.SYNC_URL, url);
+      showAdminNotice(url ? 'URL Google Apps Script enregistrée.' : 'URL effacée (mode local uniquement).');
+      if (url) syncCodesFromSheet(true);
     }
 
-    function onSummaryManualEdit() {
-      cvState.summary = document.getElementById('cvSummary').value;
-      cvState.summaryCustomized = true;
-      updateSummaryBadge();
-      updateCV();
+    function showAdminNotice(msg, isError = false) {
+      const el = document.getElementById('adminNotice');
+      el.textContent = msg;
+      el.className = 'alert ' + (isError ? 'alert-error' : 'alert-success');
+      el.classList.remove('hidden');
     }
 
-    function toggleAutoSummarySync() {
-      cvState.autoSummarySync = document.getElementById('autoSummarySync').checked;
-      if (cvState.autoSummarySync) {
-        cvState.summaryCustomized = false;
-        const generated = buildAutoSummary();
-        cvState.summary = generated;
-        document.getElementById('cvSummary').value = generated;
-      }
-      updateSummaryBadge();
-      updateCV();
-    }
-
-    function regenerateAutoSummary() {
-      const generated = buildAutoSummary();
-      cvState.summary = generated;
-      cvState.summaryCustomized = false;
-      cvState.autoSummarySync = true;
-      document.getElementById('autoSummarySync').checked = true;
-      document.getElementById('cvSummary').value = generated;
-      updateSummaryBadge();
-      updateCV();
-    }
-
-    function onProfileInputChanged() {
-      if (cvState.autoSummarySync && !cvState.summaryCustomized) {
-        const generated = buildAutoSummary();
-        cvState.summary = generated;
-        const summaryEl = document.getElementById('cvSummary');
-        if (summaryEl) summaryEl.value = generated;
-      }
-      updateSummaryBadge();
-      updateCV();
-    }
-
-    async function improveSummaryWithAI() {
-      const btn = document.getElementById('btnAiSummary');
-      const currentSummary = document.getElementById('cvSummary').value.trim();
-      const jobTitle = document.getElementById('cvJobTitle').value.trim();
-      const skills = document.getElementById('cvSkills').value.trim();
-
-      btn.disabled = true;
-      const originalText = btn.textContent;
-      btn.textContent = 'Analyse IA...';
-
-      try {
-        const prompt = [
-          'Rédige en français un résumé de profil professionnel clair, percutant et crédible (3 à 4 phrases maximum) pour un CV.',
-          jobTitle ? `Poste visé : ${jobTitle}` : '',
-          skills ? `Compétences clés : ${skills}` : '',
-          currentSummary ? `Texte actuel à améliorer : ${currentSummary}` : ''
-        ].filter(Boolean).join('\n');
-
-        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }]
-          })
-        });
-
-        let suggestion = '';
-        if (response.ok) {
-          const data = await response.json();
-          suggestion = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
-        }
-
-        if (!suggestion) {
-          const roleLabel = jobTitle || 'votre domaine professionnel';
-          const skillPart = skills ? ` avec une solide maîtrise de ${splitTags(skills).slice(0, 3).join(', ')}` : '';
-          suggestion = `Professionnel rigoureux, méthodique et orienté résultats${skillPart}. Reconnu pour sa capacité d’analyse, son sens de l’organisation et sa réactivité, il souhaite s’investir pleinement dans un poste de ${roleLabel} afin d’apporter une valeur ajoutée durable à l’équipe.`;
-        }
-
-        pendingAISummaryText = suggestion;
-        document.getElementById('aiSummarySuggestion').textContent = suggestion;
-        document.getElementById('aiSummaryBox').classList.remove('hidden');
-      } catch {
-        const roleLabel = jobTitle || 'votre domaine professionnel';
-        const fallback = `Professionnel rigoureux et fiable, doté d’un fort esprit d’analyse et d’une grande capacité d’adaptation. Engagé et organisé, il met ses compétences au service d’un poste de ${roleLabel} pour accompagner efficacement les objectifs de l’organisation.`;
-        pendingAISummaryText = fallback;
-        document.getElementById('aiSummarySuggestion').textContent = fallback;
-        document.getElementById('aiSummaryBox').classList.remove('hidden');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = originalText;
-      }
-    }
-
-    function applyAISummarySuggestion() {
-      if (!pendingAISummaryText) return;
-      cvState.summary = pendingAISummaryText;
-      cvState.summaryCustomized = true;
-      document.getElementById('cvSummary').value = pendingAISummaryText;
-      document.getElementById('aiSummaryBox').classList.add('hidden');
-      updateSummaryBadge();
-      updateCV();
-    }
-
-    function dismissAISummarySuggestion() {
-      pendingAISummaryText = '';
-      document.getElementById('aiSummaryBox').classList.add('hidden');
-    }
-
-    function applyResolvedStylesToPrintNode(rootEl) {
-      if (!rootEl) return;
-      const pColor = cvState.primaryColor || '#1e3a8a';
-      const lColor = cvState.lightColor || '#eff6ff';
-
-      rootEl.style.setProperty('--primary', pColor);
-      rootEl.style.setProperty('--primary-light', lColor);
-      rootEl.style.width = '794px';
-      rootEl.style.maxWidth = '794px';
-      rootEl.style.minHeight = '1122px';
-      rootEl.style.background = '#ffffff';
-      rootEl.style.color = '#1e293b';
-      rootEl.style.boxShadow = 'none';
-
-      rootEl.querySelectorAll('.cv-section-heading').forEach(h => {
-        h.style.color = pColor;
-        h.style.borderBottomColor = pColor;
-      });
-      rootEl.querySelectorAll('.cv-tag').forEach(t => {
-        t.style.background = lColor;
-        t.style.color = pColor;
-        t.style.borderColor = pColor;
-      });
-      rootEl.querySelectorAll('.cv-photo').forEach(img => {
-        img.style.borderColor = pColor;
-      });
-
-      if (rootEl.classList.contains('tpl-cabinet-left')) {
-        rootEl.style.display = 'grid';
-        rootEl.style.gridTemplateColumns = '265px minmax(0, 1fr)';
-        const left = rootEl.querySelector('.cv-left');
-        if (left) {
-          left.style.background = pColor;
-          left.style.color = '#ffffff';
-        }
-        left?.querySelectorAll('.cv-section-heading').forEach(h => {
-          h.style.color = '#ffffff';
-          h.style.borderBottomColor = 'rgba(255,255,255,0.55)';
-        });
-        left?.querySelectorAll('.cv-tag').forEach(t => {
-          t.style.background = 'rgba(255,255,255,0.16)';
-          t.style.color = '#ffffff';
-          t.style.borderColor = 'rgba(255,255,255,0.32)';
-        });
-        const nameEl = rootEl.querySelector('.cv-name');
-        if (nameEl) nameEl.style.color = pColor;
-        const photoEl = rootEl.querySelector('.cv-photo');
-        if (photoEl) photoEl.style.borderColor = 'rgba(255,255,255,0.92)';
-      } else if (rootEl.classList.contains('tpl-sommet-executif')) {
-        const banner = rootEl.querySelector('.cv-exec-banner');
-        if (banner) banner.style.borderBottomColor = pColor;
-        rootEl.querySelectorAll('.cv-kpi-box').forEach(box => {
-          box.style.background = lColor;
-          box.style.borderColor = pColor;
-        });
-        rootEl.querySelectorAll('.cv-kpi-label').forEach(lbl => {
-          lbl.style.color = pColor;
-        });
-        const photoEl = rootEl.querySelector('.cv-photo');
-        if (photoEl) photoEl.style.borderColor = '#ffffff';
-      } else if (rootEl.classList.contains('tpl-horizon-asym')) {
-        rootEl.style.display = 'grid';
-        rootEl.style.gridTemplateColumns = 'minmax(0, 1fr) 250px';
-        const side = rootEl.querySelector('.cv-side-col');
-        if (side) {
-          side.style.background = lColor;
-          side.style.borderLeftColor = pColor;
-          side.style.borderTop = 'none';
-        }
-        const titleEl = rootEl.querySelector('.cv-title');
-        if (titleEl) titleEl.style.color = pColor;
-        rootEl.querySelectorAll('.cv-entry').forEach(entry => {
-          entry.style.borderLeftColor = pColor;
-        });
-      } else if (rootEl.classList.contains('tpl-grille-dir')) {
-        const topBox = rootEl.querySelector('.cv-grid-top');
-        if (topBox) {
-          topBox.style.background = lColor;
-          topBox.style.borderColor = pColor;
-        }
-        const nameEl = rootEl.querySelector('.cv-name');
-        if (nameEl) nameEl.style.color = pColor;
-        rootEl.querySelectorAll('.cv-box-card').forEach(card => {
-          card.style.borderTopColor = pColor;
-        });
-      } else if (rootEl.classList.contains('tpl-epure-suisse')) {
-        const hdr = rootEl.querySelector('.cv-swiss-header');
-        if (hdr) hdr.style.borderTopColor = pColor;
-        const titleEl = rootEl.querySelector('.cv-title');
-        if (titleEl) titleEl.style.color = pColor;
-      }
-    }
-
-    function buildStandalonePrintableHtml(cloneHtml, docTitle) {
-      const styleTag = document.querySelector('style')?.outerHTML || '';
-      return `<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <title>${escapeHtml(docTitle)}</title>
-  ${styleTag}
-  <style>
-    @page { size: A4 portrait; margin: 0; }
-    body { margin: 0; padding: 0; background: #e2e8f0; }
-    .print-toolbar {
-      position: sticky; top: 0; z-index: 20;
-      background: #0f172a; color: #fff;
-      padding: 10px 16px; display: flex; gap: 10px; align-items: center; justify-content: space-between;
-    }
-    .print-sheet-wrap { display: flex; justify-content: center; padding: 16px; }
-    .a4-page { box-shadow: 0 12px 28px rgba(0,0,0,0.2); width: 210mm; max-width: 210mm; min-height: 297mm; }
-    @media print {
-      body { background: #fff; }
-      .print-toolbar { display: none !important; }
-      .print-sheet-wrap { padding: 0 !important; display: block !important; }
-      .a4-page { box-shadow: none !important; margin: 0 !important; width: 210mm !important; max-width: 210mm !important; min-height: 297mm !important; }
-    }
-  </style>
-</head>
-<body>
-  <div class="print-toolbar">
-    <span style="font-weight:700; font-size:0.9rem;">${escapeHtml(docTitle)}</span>
-    <button onclick="window.print()" style="background:#16a34a; color:#fff; border:none; border-radius:6px; padding:8px 14px; font-weight:700; cursor:pointer;">Imprimer / Enregistrer en PDF</button>
-  </div>
-  <div class="print-sheet-wrap">${cloneHtml}</div>
-  <script>
-    window.addEventListener('load', function () {
-      setTimeout(function () {
-        try { window.print(); } catch (e) {}
-      }, 200);
-    });
-  <\/script>
-</body>
-</html>`;
-    }
-
-    function openStandalonePrintTabOrPdfFallback() {
-      const sourceEl = document.getElementById('cvPreview');
-      if (!sourceEl) return false;
-
-      const clone = sourceEl.cloneNode(true);
-      clone.id = 'printTabCvPage';
-      applyResolvedStylesToPrintNode(clone);
-
-      const safeName = (cvState.fullName || 'CV_Professionnel').replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_');
-      const docTitle = `CV_${safeName}`;
-      const htmlContent = buildStandalonePrintableHtml(clone.outerHTML, docTitle);
-
-      try {
-        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-        const blobUrl = URL.createObjectURL(blob);
-        const win = window.open(blobUrl, '_blank');
-        if (win) {
-          setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
-          return true;
-        }
-        URL.revokeObjectURL(blobUrl);
-      } catch {}
-
-      return false;
-    }
-
-    function printIntoSandboxFrame(cloneHtml, docTitle) {
-      const frame = document.getElementById('printSandboxFrame');
-      if (!frame) return false;
-      try {
-        const htmlContent = buildStandalonePrintableHtml(cloneHtml, docTitle).replace(
-          /window\.addEventListener\('load'[\s\S]*?<\/script>/i,
-          ''
-        );
-        frame.srcdoc = htmlContent;
-        frame.onload = () => {
-          try {
-            const targetWin = frame.contentWindow;
-            if (targetWin) {
-              targetWin.focus();
-              targetWin.print();
-            }
-          } catch {}
-        };
-        return true;
-      } catch {
-        return false;
-      }
-    }
-
-    function openFullScreenPrintOverlay() {
-      const sourceEl = document.getElementById('cvPreview');
-      const modal = document.getElementById('printModal');
-      const stage = document.getElementById('printModalStage');
-      if (!sourceEl || !modal || !stage) return;
-
-      stage.innerHTML = '';
-      const clone = sourceEl.cloneNode(true);
-      clone.id = 'printModalCvPage';
-      applyResolvedStylesToPrintNode(clone);
-      stage.appendChild(clone);
-
-      document.body.classList.add('print-modal-open');
-      modal.classList.remove('hidden');
-    }
-
-    function closePrintPreviewOverlay() {
-      const modal = document.getElementById('printModal');
-      if (modal) modal.classList.add('hidden');
-      document.body.classList.remove('print-modal-open');
-    }
-
-    function triggerNativePrintAttempt(onNotTriggeredCallback) {
-      let printStarted = false;
-      const markStarted = () => { printStarted = true; };
-
-      window.addEventListener('beforeprint', markStarted, { once: true });
-      const prevTitle = document.title;
-      const safeName = (cvState.fullName || 'CV_Professionnel').replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_');
-      document.title = `CV_${safeName}`;
-
-      let calledPrint = false;
-      try {
-        window.print();
-        calledPrint = true;
-      } catch {
-        calledPrint = false;
-      }
-
-      setTimeout(() => {
-        window.removeEventListener('beforeprint', markStarted);
-        document.title = prevTitle;
-        if ((!calledPrint || !printStarted) && typeof onNotTriggeredCallback === 'function') {
-          onNotTriggeredCallback();
-        }
-      }, 700);
-    }
-
-    function launchPrintFromModal() {
-      const hintEl = document.getElementById('printModalHint');
-      const sourceEl = document.getElementById('cvPreview');
-      const safeName = (cvState.fullName || 'CV_Professionnel').replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_');
-      const docTitle = `CV_${safeName}`;
-
-      if (sourceEl) {
-        const clone = sourceEl.cloneNode(true);
-        clone.id = 'printFrameCvPage';
-        applyResolvedStylesToPrintNode(clone);
-        printIntoSandboxFrame(clone.outerHTML, docTitle);
-      }
-
-      triggerNativePrintAttempt(() => {
-        if (hintEl) {
-          hintEl.textContent = 'Ouverture dans un onglet A4 ou utilisation de « Enregistrer en PDF »...';
-        }
-        const opened = openStandalonePrintTabOrPdfFallback();
-        if (!opened) {
-          downloadPdfCV();
-        }
-      });
-    }
-
-    function fallbackPrintToPdf() {
-      closePrintPreviewOverlay();
-      downloadPdfCV();
-    }
-
-    function printCV() {
-      const sourceEl = document.getElementById('cvPreview');
-      if (!sourceEl) return;
-
-      const safeName = (cvState.fullName || 'CV_Professionnel').replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_');
-      const docTitle = `CV_${safeName}`;
-      const clone = sourceEl.cloneNode(true);
-      clone.id = 'printFrameCvPage';
-      applyResolvedStylesToPrintNode(clone);
-
-      openFullScreenPrintOverlay();
-      printIntoSandboxFrame(clone.outerHTML, docTitle);
-
-      setTimeout(() => {
-        triggerNativePrintAttempt(() => {
-          const opened = openStandalonePrintTabOrPdfFallback();
-          if (!opened) {
-            const hintEl = document.getElementById('printModalHint');
-            if (hintEl) {
-              hintEl.textContent = 'Cliquez sur « Lancer l\'impression » ou « Enregistrer en PDF » ci-dessus.';
-            }
-          }
-        });
-      }, 120);
-    }
-
-    async function downloadPdfCV() {
-      const previewEl = document.getElementById('cvPreview');
-      if (!previewEl) return;
-
-      const safeName = (cvState.fullName || 'CV_Professionnel').replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_');
-      const fileName = `CV_${safeName}.pdf`;
-
-      const pdfButtons = document.querySelectorAll('#btnDownloadPdfTop, .preview-toolbar .btn-primary, .editor-panel .btn-primary');
-      pdfButtons.forEach(b => { b.disabled = true; });
-
-      const html2canvasFn = window.html2canvas;
-      const jsPDFCtor = window.jspdf?.jsPDF;
-
-      if (typeof html2canvasFn === 'function' && typeof jsPDFCtor === 'function') {
-        const captureHost = document.createElement('div');
-        captureHost.style.position = 'fixed';
-        captureHost.style.left = '-10000px';
-        captureHost.style.top = '0';
-        captureHost.style.width = '794px';
-        captureHost.style.background = '#ffffff';
-        captureHost.style.zIndex = '-1';
-
-        const clone = previewEl.cloneNode(true);
-        clone.id = 'cvPdfCaptureClone';
-        clone.style.width = '794px';
-        clone.style.maxWidth = '794px';
-        clone.style.minHeight = '1122px';
-        clone.style.boxShadow = 'none';
-        clone.style.margin = '0';
-        applyResolvedStylesToPrintNode(clone);
-        captureHost.appendChild(clone);
-        document.body.appendChild(captureHost);
-
-        try {
-          const canvas = await html2canvasFn(clone, {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: '#ffffff',
-            windowWidth: 794,
-            windowHeight: Math.max(1122, clone.scrollHeight)
-          });
-
-          const pdf = new jsPDFCtor({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: 'a4'
-          });
-
-          const pageWidthMm = 210;
-          const pageHeightMm = 297;
-          const imgWidthMm = pageWidthMm;
-          const imgHeightMm = (canvas.height * imgWidthMm) / canvas.width;
-
-          let heightLeftMm = imgHeightMm;
-          let positionMm = 0;
-
-          const imgData = canvas.toDataURL('image/jpeg', 0.95);
-          pdf.addImage(imgData, 'JPEG', 0, positionMm, imgWidthMm, imgHeightMm, undefined, 'FAST');
-          heightLeftMm -= pageHeightMm;
-
-          while (heightLeftMm > 0.5) {
-            positionMm = -(imgHeightMm - heightLeftMm);
-            pdf.addPage();
-            pdf.addImage(imgData, 'JPEG', 0, positionMm, imgWidthMm, imgHeightMm, undefined, 'FAST');
-            heightLeftMm -= pageHeightMm;
-          }
-
-          pdf.save(fileName);
-          if (captureHost.parentNode) document.body.removeChild(captureHost);
-          pdfButtons.forEach(b => { b.disabled = false; });
-          return;
-        } catch {
-          if (captureHost.parentNode) document.body.removeChild(captureHost);
-        }
-      }
-
-      pdfButtons.forEach(b => { b.disabled = false; });
-      const opened = openStandalonePrintTabOrPdfFallback();
-      if (!opened) {
-        openFullScreenPrintOverlay();
-        const hintEl = document.getElementById('printModalHint');
-        if (hintEl) {
-          hintEl.textContent = 'Utilisez « Lancer l\'impression » puis choisissez « Enregistrer au format PDF » dans votre navigateur.';
-        }
-      }
-    }
-
-    function scrollToPreview() {
-      const el = document.getElementById('previewShell');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function scrollToEditor() {
-      const el = document.getElementById('editorFormPanel');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function jumpToSection(sectionId, btnEl) {
-      document.querySelectorAll('.quick-sec-btn').forEach(b => b.classList.remove('active'));
-      if (btnEl) btnEl.classList.add('active');
-      const target = document.getElementById(sectionId);
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function fillSampleCV() {
-      const lockedName = cvState.fullName || 'OUEDRAOGO Karim Désiré';
-      cvState = {
-        ...cvState,
-        fullName: lockedName,
-        jobTitle: 'Responsable Administratif et Financier',
-        phone: '+226 70 45 82 19',
-        email: 'karim.ouedraogo.exemple@gmail.com',
-        address: 'Ouagadougou, Burkina Faso',
-        extraInfo: 'Permis B',
-        summaryCustomized: true,
-        summary: 'Cadre rigoureux et méthodique avec une solide expérience en gestion administrative, contrôle budgétaire et analyse financière. Reconnu pour sa fiabilité, son sens de l’organisation et sa capacité à structurer les processus opérationnels au service de la performance.',
-        experiences: [
-          {
-            role: 'Chargé de Contrôle de Gestion & Administration',
-            company: 'Cabinet Horizon Conseil SA',
-            period: '01/04/2022 - Présent',
-            desc: 'Suivi budgétaire mensuel, élaboration des tableaux de bord de direction et coordination administrative.'
-          },
-          {
-            role: 'Assistant Comptable et Financier',
-            company: 'Entreprise Faso Logistique & Négoce',
-            period: '15/02/2020 - 31/03/2022',
-            desc: 'Rapprochements bancaires, gestion de la trésorerie quotidienne et préparation des états financiers.'
-          },
-          {
-            role: 'Analyste Junior Données & Reporting',
-            company: 'Association Sahel Initiatives',
-            period: '01/09/2018 - 31/01/2020',
-            desc: 'Consolidation des données de projets, contrôle de conformité et rédaction de synthèses d’activité.'
-          }
-        ],
-        educations: [
-          {
-            degree: 'Master en Finance et Contrôle de Gestion',
-            school: 'Université Thomas Sankara, Ouagadougou',
-            year: '2017 - 2018',
-            desc: 'Spécialisation analyse financière et pilotage de la performance.'
-          },
-          {
-            degree: 'Licence en Sciences Économiques et de Gestion',
-            school: 'Université Thomas Sankara, Ouagadougou',
-            year: '2014 - 2017',
-            desc: 'Option Économie d’Entreprise et Gestion.'
-          },
-          {
-            degree: 'Baccalauréat Série D',
-            school: 'Lycée Bogodogo, Ouagadougou',
-            year: '2013 - 2014',
-            desc: ''
-          }
-        ],
-        skills: 'Gestion budgétaire, Analyse financière, Excel avancé, Tableaux de bord, Contrôle interne, Reporting direction, Rédaction administrative',
-        languages: 'Français - Courant, Mooré - Courant, Anglais - Professionnel',
-        interests: 'Lecture économique, Course à pied, Échecs',
-        references: [
-          {
-            name: 'KAFANDO Awa',
-            role: 'Directrice Administrative — Cabinet Horizon Conseil SA (+226 70 18 44 90)'
-          },
-          {
-            name: 'ZONGO Ibrahim',
-            role: 'Chef de Département Finance — Faso Logistique & Négoce (+226 76 32 10 55)'
-          }
-        ]
-      };
-      syncFormFromState();
-      renderRepeaters();
-      updateCV();
-    }
-
-    function getAdminPin() {
-      return localStorage.getItem(STORAGE_KEYS.PIN) || DEFAULT_PIN;
-    }
-
-    function getCodes() {
+    function loadLocalCodes() {
       try {
         const raw = localStorage.getItem(STORAGE_KEYS.CODES);
-        const list = raw ? JSON.parse(raw) : [];
-        return Array.isArray(list) ? list : [];
-      } catch {
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
         return [];
       }
     }
 
-    function saveCodes(list) {
-      localStorage.setItem(STORAGE_KEYS.CODES, JSON.stringify(list));
+    function saveLocalCodes(list) {
+      codesCache = Array.isArray(list) ? list : [];
+      localStorage.setItem(STORAGE_KEYS.CODES, JSON.stringify(codesCache));
     }
 
-    function normalizeCode(str) {
-      return (str || '').trim().toUpperCase();
+    async function callGasApi(paramsObj) {
+      const baseUrl = getSyncUrl();
+      if (!baseUrl) return null;
+      const url = new URL(baseUrl);
+      Object.entries(paramsObj).forEach(([k, v]) => {
+        if (v !== undefined && v !== null) url.searchParams.set(k, String(v));
+      });
+      const res = await fetch(url.toString(), { method: 'GET' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return await res.json();
     }
 
-    function normalizeText(str) {
-      return (str || '').trim().replace(/\s+/g, ' ');
+    async function syncCodesFromSheet(showFeedback = false) {
+      const url = getSyncUrl();
+      if (!url) {
+        if (showFeedback) showAdminNotice('Aucune URL Google Apps Script configurée. Affichage des codes locaux.', true);
+        renderAdminTable();
+        return;
+      }
+      try {
+        const data = await callGasApi({ action: 'list' });
+        if (data && data.ok && Array.isArray(data.codes)) {
+          saveLocalCodes(data.codes);
+          renderAdminTable();
+          if (showFeedback) showAdminNotice('Synchronisation réussie avec Google Sheets (' + data.codes.length + ' code(s)).');
+        } else if (showFeedback) {
+          showAdminNotice((data && data.message) || 'Réponse inattendue de Google Sheets.', true);
+        }
+      } catch (err) {
+        if (showFeedback) showAdminNotice('Erreur de synchronisation : ' + err.message, true);
+      }
     }
 
-    function formatNomPrenom(nom, prenom) {
-      const cleanNom = normalizeText(nom).toUpperCase();
-      const cleanPrenom = normalizeText(prenom)
-        .toLowerCase()
-        .replace(/(^|[\s-])([a-zà-öø-ÿ])/g, (_, sep, ch) => sep + ch.toUpperCase());
-      return `${cleanNom} ${cleanPrenom}`.trim();
+    function formatIdentity(nom, prenom) {
+      const cleanNom = String(nom || '').trim().toUpperCase();
+      const cleanPrenom = String(prenom || '').trim();
+      return (cleanNom + ' ' + cleanPrenom).trim();
     }
 
     function normalizePhone(phone) {
-      return (phone || '').replace(/[^\d+]/g, '');
+      return String(phone || '').replace(/[^\d+]/g, '');
     }
 
     function formatDateTime(ts) {
       if (!ts) return '—';
-      const d = new Date(ts);
-      return d.toLocaleDateString('fr-FR', {
-        day: '2-digit', month: '2-digit', year: 'numeric'
-      }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      const d = new Date(Number(ts));
+      if (isNaN(d.getTime())) return '—';
+      return d.toLocaleString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
     }
 
-    function formatRemaining(ms) {
-      if (ms <= 0) return 'Expiré';
-      const totalMin = Math.floor(ms / 60000);
-      const hrs = Math.floor(totalMin / 60);
-      const mins = totalMin % 60;
-      return `${hrs}h ${String(mins).padStart(2, '0')}m restantes`;
+    function formatRemaining(expiresAt) {
+      const diff = Number(expiresAt) - Date.now();
+      if (diff <= 0) return 'Expiré';
+      const hrs = Math.floor(diff / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      return hrs + 'h ' + String(mins).padStart(2, '0') + 'm restantes';
     }
 
-    function randomCodeString() {
+    function getCodeStatus(entry) {
+      if (!entry.activatedAt) return 'available';
+      if (!entry.expiresAt || Date.now() >= Number(entry.expiresAt)) return 'expired';
+      return 'active';
+    }
+
+    function showAuthAlert(msg) {
+      const el = document.getElementById('authAlert');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    function hideAuthAlert() {
+      document.getElementById('authAlert').classList.add('hidden');
+    }
+
+    async function handleClientLogin(e) {
+      e.preventDefault();
+      hideAuthAlert();
+
+      const nom = document.getElementById('loginNom').value.trim();
+      const prenom = document.getElementById('loginPrenom').value.trim();
+      const phone = document.getElementById('loginPhone').value.trim();
+      const code = document.getElementById('loginCode').value.trim().toUpperCase();
+
+      if (!nom || !prenom || !phone || !code) {
+        showAuthAlert('Veuillez remplir tous les champs obligatoires.');
+        return;
+      }
+
+      const fullName = formatIdentity(nom, prenom);
+      const cleanPhone = normalizePhone(phone);
+
+      if (getSyncUrl()) {
+        try {
+          const data = await callGasApi({
+            action: 'activate',
+            code,
+            nom: nom.toUpperCase(),
+            prenom,
+            fullName,
+            phone
+          });
+          if (!data || !data.ok) {
+            showAuthAlert((data && data.message) || 'Code invalide ou refusé.');
+            return;
+          }
+          const session = {
+            code: data.session.code || code,
+            nom: nom.toUpperCase(),
+            prenom,
+            fullName: data.session.fullName || fullName,
+            phone: data.session.phone || phone,
+            expiresAt: Number(data.session.expiresAt) || (Date.now() + DAY_MS)
+          };
+          activateSession(session);
+          return;
+        } catch (err) {
+          showAuthAlert('Impossible de vérifier le code en ligne : ' + err.message);
+          return;
+        }
+      }
+
+      // Fallback local if no GAS URL is configured yet
+      const list = loadLocalCodes();
+      const idx = list.findIndex(c => String(c.code).toUpperCase() === code);
+      if (idx === -1) {
+        showAuthAlert('Code d’accès invalide ou inexistant.');
+        return;
+      }
+
+      const entry = list[idx];
+      const now = Date.now();
+
+      if (!entry.activatedAt) {
+        entry.activatedAt = now;
+        entry.expiresAt = now + DAY_MS;
+        entry.clientNom = nom.toUpperCase();
+        entry.clientPrenom = prenom;
+        entry.clientFullName = fullName;
+        entry.clientPhone = phone;
+        list[idx] = entry;
+        saveLocalCodes(list);
+      } else {
+        const sameId = String(entry.clientFullName || '').trim() === fullName &&
+                       normalizePhone(entry.clientPhone) === cleanPhone;
+        if (!sameId) {
+          showAuthAlert('Ce code est déjà attribué à un autre client (1 code = 1 client).');
+          return;
+        }
+        if (!entry.expiresAt || now >= Number(entry.expiresAt)) {
+          showAuthAlert('Votre accès de 24 heures pour ce code a expiré.');
+          return;
+        }
+      }
+
+      activateSession({
+        code,
+        nom: nom.toUpperCase(),
+        prenom,
+        fullName,
+        phone,
+        expiresAt: Number(entry.expiresAt)
+      });
+    }
+
+    function activateSession(session) {
+      currentSession = session;
+      localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(session));
+
+      document.getElementById('cvNom').value = session.nom;
+      document.getElementById('cvPrenom').value = session.prenom;
+
+      document.getElementById('bannerClientName').textContent = session.fullName;
+      document.getElementById('bannerPhone').textContent = session.phone;
+
+      document.getElementById('authScreen').classList.add('hidden');
+      document.getElementById('adminScreen').classList.add('hidden');
+      document.getElementById('sessionBanner').classList.remove('hidden');
+      document.getElementById('editorScreen').classList.remove('hidden');
+
+      document.getElementById('btnPreviewTop').classList.remove('hidden');
+      document.getElementById('btnDownloadPdfTop').classList.remove('hidden');
+      document.getElementById('btnPrintTop').classList.remove('hidden');
+      document.getElementById('btnLogoutClient').classList.remove('hidden');
+      document.getElementById('btnOpenAdmin').classList.add('hidden');
+      document.getElementById('btnBackToClient').classList.add('hidden');
+
+      if (!experiences.length) addExperience(true);
+      if (!educations.length) addEducation(true);
+      if (!referencesList.length) addReference(true);
+
+      updateTimerBanner();
+      updateCV();
+    }
+
+    function logoutClient() {
+      currentSession = null;
+      localStorage.removeItem(STORAGE_KEYS.SESSION);
+      document.getElementById('editorScreen').classList.add('hidden');
+      document.getElementById('sessionBanner').classList.add('hidden');
+      document.getElementById('btnPreviewTop').classList.add('hidden');
+      document.getElementById('btnDownloadPdfTop').classList.add('hidden');
+      document.getElementById('btnPrintTop').classList.add('hidden');
+      document.getElementById('btnLogoutClient').classList.add('hidden');
+      document.getElementById('btnOpenAdmin').classList.remove('hidden');
+      document.getElementById('authScreen').classList.remove('hidden');
+    }
+
+    function updateTimerBanner() {
+      if (!currentSession) return;
+      const timerEl = document.getElementById('bannerTimer');
+      if (Date.now() >= Number(currentSession.expiresAt)) {
+        timerEl.className = 'pill pill-red';
+        timerEl.textContent = 'Session expirée';
+        logoutClient();
+        showAuthAlert('Votre accès de 24 heures a expiré.');
+        return;
+      }
+      timerEl.className = 'pill pill-green';
+      timerEl.textContent = formatRemaining(currentSession.expiresAt);
+    }
+
+    // Admin PIN & Console
+    function openPinModal() {
+      document.getElementById('pinError').classList.add('hidden');
+      document.getElementById('adminPinInput').value = '';
+      document.getElementById('pinModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('adminPinInput').focus(), 50);
+    }
+
+    function closePinModal() {
+      document.getElementById('pinModal').classList.add('hidden');
+    }
+
+    function verifyAdminPin(e) {
+      e.preventDefault();
+      const pin = document.getElementById('adminPinInput').value.trim();
+      if (pin !== ADMIN_PIN) {
+        document.getElementById('pinError').classList.remove('hidden');
+        return;
+      }
+      isAdminUnlocked = true;
+      closePinModal();
+      enterAdminView();
+    }
+
+    function enterAdminView() {
+      if (!isAdminUnlocked) {
+        openPinModal();
+        return;
+      }
+      document.getElementById('authScreen').classList.add('hidden');
+      document.getElementById('editorScreen').classList.add('hidden');
+      document.getElementById('sessionBanner').classList.add('hidden');
+      document.getElementById('adminScreen').classList.remove('hidden');
+
+      document.getElementById('btnOpenAdmin').classList.add('hidden');
+      if (currentSession) {
+        document.getElementById('btnBackToClient').classList.remove('hidden');
+      }
+
+      document.getElementById('adminSyncUrl').value = getSyncUrl();
+      codesCache = loadLocalCodes();
+      renderAdminTable();
+      syncCodesFromSheet(false);
+    }
+
+    function exitAdminView() {
+      document.getElementById('adminScreen').classList.add('hidden');
+      document.getElementById('btnBackToClient').classList.add('hidden');
+      if (currentSession) {
+        activateSession(currentSession);
+      } else {
+        document.getElementById('btnOpenAdmin').classList.remove('hidden');
+        document.getElementById('authScreen').classList.remove('hidden');
+      }
+    }
+
+    function makeRandomCode() {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
       let part = '';
       for (let i = 0; i < 6; i++) {
-        part += chars[Math.floor(Math.random() * chars.length)];
+        part += chars.charAt(Math.floor(Math.random() * chars.length));
       }
-      return `CV-${part}`;
+      return 'CVP-' + part;
     }
 
-    function generateUniqueCodeObj(existingCodes) {
-      const set = new Set(existingCodes.map(c => normalizeCode(c.code)));
-      let code = randomCodeString();
-      while (set.has(code)) {
-        code = randomCodeString();
+    async function generateNewCode() {
+      const existing = loadLocalCodes();
+      let code = makeRandomCode();
+      while (existing.some(c => String(c.code).toUpperCase() === code)) {
+        code = makeRandomCode();
       }
-      return {
+      const createdAt = Date.now();
+      const newEntry = {
         code,
-        createdAt: Date.now(),
+        createdAt,
         activatedAt: null,
         expiresAt: null,
         clientNom: '',
@@ -2146,799 +1574,598 @@
         clientFullName: '',
         clientPhone: ''
       };
-    }
 
-    function generateNewCode() {
-      const codes = getCodes();
-      const item = generateUniqueCodeObj(codes);
-      codes.unshift(item);
-      saveCodes(codes);
-      lastGeneratedCodes = [item.code];
-      showLastGenerated();
+      existing.unshift(newEntry);
+      saveLocalCodes(existing);
       renderAdminTable();
+
+      if (getSyncUrl()) {
+        try {
+          const res = await callGasApi({ action: 'create', code, createdAt });
+          if (res && res.ok) {
+            showAdminNotice('Code ' + code + ' généré et enregistré dans Google Sheets.');
+            await syncCodesFromSheet(false);
+            return;
+          }
+        } catch (err) {
+          showAdminNotice('Code ' + code + ' créé localement, mais erreur Sheets : ' + err.message, true);
+          return;
+        }
+      }
+      showAdminNotice('Code ' + code + ' généré (local).');
     }
 
-    function generateBatchCodes(count) {
-      const codes = getCodes();
-      const created = [];
-      for (let i = 0; i < count; i++) {
-        const item = generateUniqueCodeObj(codes);
-        codes.unshift(item);
-        created.push(item.code);
+    async function renewCode(code) {
+      const upper = String(code).toUpperCase();
+      if (getSyncUrl()) {
+        try {
+          const res = await callGasApi({ action: 'renew', code: upper });
+          if (res && res.ok) {
+            showAdminNotice('Code ' + upper + ' prolongé de 24 h dans Google Sheets.');
+            await syncCodesFromSheet(false);
+            return;
+          }
+        } catch (err) {
+          showAdminNotice('Erreur lors du renouvellement : ' + err.message, true);
+          return;
+        }
       }
-      saveCodes(codes);
-      lastGeneratedCodes = created;
-      showLastGenerated();
+      const list = loadLocalCodes();
+      const idx = list.findIndex(c => String(c.code).toUpperCase() === upper);
+      if (idx !== -1) {
+        const now = Date.now();
+        const base = Number(list[idx].expiresAt) > now ? Number(list[idx].expiresAt) : now;
+        list[idx].activatedAt = list[idx].activatedAt || now;
+        list[idx].expiresAt = base + DAY_MS;
+        saveLocalCodes(list);
+        renderAdminTable();
+        showAdminNotice('Code ' + upper + ' prolongé de 24 h.');
+      }
+    }
+
+    async function deleteCode(code) {
+      const upper = String(code).toUpperCase();
+      if (!confirm('Supprimer le code ' + upper + ' ?')) return;
+
+      if (getSyncUrl()) {
+        try {
+          const res = await callGasApi({ action: 'delete', code: upper });
+          if (res && res.ok) {
+            showAdminNotice('Code ' + upper + ' supprimé de Google Sheets.');
+            await syncCodesFromSheet(false);
+            return;
+          }
+        } catch (err) {
+          showAdminNotice('Erreur lors de la suppression : ' + err.message, true);
+          return;
+        }
+      }
+      const list = loadLocalCodes().filter(c => String(c.code).toUpperCase() !== upper);
+      saveLocalCodes(list);
       renderAdminTable();
+      showAdminNotice('Code ' + upper + ' supprimé.');
     }
 
-    function showLastGenerated() {
-      const box = document.getElementById('lastGeneratedBox');
-      const txt = document.getElementById('lastGeneratedText');
-      if (lastGeneratedCodes.length > 0) {
-        txt.textContent = lastGeneratedCodes.join('  |  ');
-        box.classList.remove('hidden');
+    function copyCodeText(code) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(() => {
+          showAdminNotice('Code ' + code + ' copié dans le presse-papiers.');
+        }).catch(() => {});
       }
-    }
-
-    function copyLastGenerated() {
-      if (!lastGeneratedCodes.length) return;
-      const text = lastGeneratedCodes.join('\n');
-      navigator.clipboard?.writeText(text).then(() => {
-        alert('Code(s) copié(s) dans le presse-papiers.');
-      }).catch(() => {
-        prompt('Copiez le code ci-dessous :', text);
-      });
-    }
-
-    function renewCode24h(codeStr) {
-      const codes = getCodes();
-      const idx = codes.findIndex(c => normalizeCode(c.code) === normalizeCode(codeStr));
-      if (idx === -1) return;
-      const now = Date.now();
-      const base = (codes[idx].expiresAt && codes[idx].expiresAt > now) ? codes[idx].expiresAt : now;
-      if (!codes[idx].activatedAt) codes[idx].activatedAt = now;
-      codes[idx].expiresAt = base + DAY_MS;
-      saveCodes(codes);
-      renderAdminTable();
-    }
-
-    function deleteCodeItem(codeStr) {
-      if (!confirm('Voulez-vous vraiment supprimer définitivement ce code d’accès ? Le client ne pourra plus se connecter avec ce code.')) {
-        return;
-      }
-      const target = normalizeCode(codeStr);
-      const filtered = getCodes().filter(c => normalizeCode(c.code) !== target);
-      saveCodes(filtered);
-
-      const session = getActiveSession();
-      if (session && normalizeCode(session.code) === target) {
-        localStorage.removeItem(STORAGE_KEYS.SESSION);
-      }
-      renderAdminTable();
-    }
-
-    function exportCodesTXT() {
-      const codes = getCodes();
-      const lines = codes.map(c => {
-        const status = !c.activatedAt ? 'DISPONIBLE' : (Date.now() < c.expiresAt ? 'ACTIF' : 'EXPIRÉ');
-        return `${c.code} | Créé le: ${formatDateTime(c.createdAt)} | Statut: ${status} | Client: ${c.clientFullName || 'Aucun'} | Tél: ${c.clientPhone || '-'}`;
-      });
-      downloadBlob(lines.join('\n'), 'codes_cv_studio_pro.txt', 'text/plain;charset=utf-8');
-    }
-
-    function exportCodesCSV() {
-      const codes = getCodes();
-      const header = 'Code;Date_Creation;Statut;Client_NOM_Prenom;Telephone_Depot;Expiration';
-      const rows = codes.map(c => {
-        const status = !c.activatedAt ? 'Disponible' : (Date.now() < c.expiresAt ? 'Actif' : 'Expire');
-        return [
-          c.code,
-          formatDateTime(c.createdAt),
-          status,
-          c.clientFullName || '',
-          c.clientPhone || '',
-          c.expiresAt ? formatDateTime(c.expiresAt) : ''
-        ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(';');
-      });
-      downloadBlob('\uFEFF' + [header, ...rows].join('\n'), 'codes_cv_studio_pro.csv', 'text/csv;charset=utf-8');
-    }
-
-    function downloadBlob(content, filename, mime) {
-      const blob = new Blob([content], { type: mime });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
     }
 
     function renderAdminTable() {
-      const codes = getCodes();
-      const query = normalizeText(document.getElementById('adminSearch')?.value || '').toLowerCase();
-      const now = Date.now();
+      const list = loadLocalCodes();
+      let avail = 0, active = 0, expired = 0;
 
-      let available = 0, active = 0, expired = 0;
-      codes.forEach(c => {
-        if (!c.activatedAt) available++;
-        else if (now < c.expiresAt) active++;
+      list.forEach(c => {
+        const st = getCodeStatus(c);
+        if (st === 'available') avail++;
+        else if (st === 'active') active++;
         else expired++;
       });
 
-      document.getElementById('statTotal').textContent = codes.length;
-      document.getElementById('statAvailable').textContent = available;
+      document.getElementById('statTotal').textContent = list.length;
+      document.getElementById('statAvailable').textContent = avail;
       document.getElementById('statActive').textContent = active;
       document.getElementById('statExpired').textContent = expired;
 
-      const tbody = document.getElementById('adminTableBody');
-      tbody.innerHTML = '';
-
-      const filtered = codes.filter(c => {
-        if (!query) return true;
-        const statusStr = !c.activatedAt ? 'disponible' : (now < c.expiresAt ? 'actif' : 'expiré');
-        return (
-          (c.clientFullName || '').toLowerCase().includes(query) ||
-          (c.clientPhone || '').toLowerCase().includes(query) ||
-          statusStr.includes(query)
-        );
-      });
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#64748b; padding:18px;">Aucun code trouvé. Cliquez sur « + Générer 1 code » pour commencer.</td></tr>';
+      const tbody = document.getElementById('adminCodesTbody');
+      if (!list.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#64748b; padding:20px;">Aucun code généré pour le moment.</td></tr>';
         return;
       }
 
-      filtered.forEach(c => {
-        const isAvailable = !c.activatedAt;
-        const isActive = c.activatedAt && now < c.expiresAt;
-        let badge = '<span class="pill pill-green">Disponible</span>';
-        let expiryText = '24h dès 1re connexion';
+      tbody.innerHTML = list.map(c => {
+        const st = getCodeStatus(c);
+        let badge = '<span class="pill pill-blue">Disponible</span>';
+        if (st === 'active') badge = '<span class="pill pill-green">Actif</span>';
+        else if (st === 'expired') badge = '<span class="pill pill-red">Expiré</span>';
 
-        if (!isAvailable && isActive) {
-          badge = '<span class="pill pill-blue">Actif</span>';
-          expiryText = `${formatDateTime(c.expiresAt)} (${formatRemaining(c.expiresAt - now)})`;
-        } else if (!isAvailable && !isActive) {
-          badge = '<span class="pill pill-red">Expiré</span>';
-          expiryText = `Expiré le ${formatDateTime(c.expiresAt)}`;
-        }
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><span style="color:#475569; font-weight:600;">Code client masqué ••••</span></td>
-          <td>${formatDateTime(c.createdAt)}</td>
-          <td>${badge}</td>
-          <td><strong>${escapeHtml(c.clientFullName || 'Non attribué')}</strong></td>
-          <td>${escapeHtml(c.clientPhone || '—')}</td>
-          <td>${expiryText}</td>
-          <td style="white-space:nowrap;">
-            <button class="btn btn-warning btn-sm" onclick="renewCode24h('${c.code}')">+24 h</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteCodeItem('${c.code}')">Supprimer</button>
-          </td>
+        return `
+          <tr>
+            <td><strong>${escapeHtml(c.code)}</strong></td>
+            <td>${badge}</td>
+            <td>${escapeHtml(c.clientFullName || '—')}</td>
+            <td>${escapeHtml(c.clientPhone || '—')}</td>
+            <td>${escapeHtml(formatDateTime(c.expiresAt))}</td>
+            <td style="white-space:nowrap; display:flex; gap:5px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="copyCodeText('${escapeHtml(c.code)}')">Copier</button>
+              <button type="button" class="btn btn-warning btn-sm" onclick="renewCode('${escapeHtml(c.code)}')">+24h</button>
+              <button type="button" class="btn btn-danger btn-sm" onclick="deleteCode('${escapeHtml(c.code)}')">Supprimer</button>
+            </td>
+          </tr>
         `;
-        tbody.appendChild(tr);
-      });
+      }).join('');
     }
 
-    function openPinModal() {
-      document.getElementById('pinError').classList.add('hidden');
-      document.getElementById('pinInput').value = '';
-      document.getElementById('pinModal').classList.remove('hidden');
-      setTimeout(() => document.getElementById('pinInput').focus(), 50);
+    // CV Editor Logic
+    function jumpToSection(sectionId, btn) {
+      document.querySelectorAll('.quick-sec-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const target = document.getElementById(sectionId);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    function closePinModal() {
-      document.getElementById('pinModal').classList.add('hidden');
+    function scrollToPreview() {
+      const panel = document.getElementById('previewPanel');
+      if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    function verifyAdminPin() {
-      const val = document.getElementById('pinInput').value.trim();
-      if (val === getAdminPin()) {
-        closePinModal();
-        showAdminView();
-      } else {
-        document.getElementById('pinError').classList.remove('hidden');
-      }
-    }
-
-    function changeAdminPin() {
-      const val = document.getElementById('newPinInput').value.trim();
-      if (!/^\d{4,8}$/.test(val)) {
-        alert('Le nouveau code PIN doit contenir entre 4 et 8 chiffres.');
-        return;
-      }
-      localStorage.setItem(STORAGE_KEYS.PIN, val);
-      document.getElementById('newPinInput').value = '';
-      alert('Code PIN administrateur mis à jour avec succès.');
-    }
-
-    function showAdminView() {
-      document.getElementById('authScreen').classList.add('hidden');
-      document.getElementById('editorScreen').classList.add('hidden');
-      document.getElementById('sessionBanner').classList.add('hidden');
-      document.getElementById('btnPreviewTop').classList.add('hidden');
-      document.getElementById('btnDownloadPdfTop').classList.add('hidden');
-      document.getElementById('btnPrintTop').classList.add('hidden');
-      document.getElementById('btnLogoutClient').classList.add('hidden');
-      document.getElementById('btnOpenAdmin').classList.add('hidden');
-      document.getElementById('btnBackToClient').classList.remove('hidden');
-      document.getElementById('adminScreen').classList.remove('hidden');
-      renderAdminTable();
-    }
-
-    function exitAdminView() {
-      document.getElementById('adminScreen').classList.add('hidden');
-      document.getElementById('btnBackToClient').classList.add('hidden');
-      document.getElementById('btnOpenAdmin').classList.remove('hidden');
-      restoreAppState();
-    }
-
-    function showAuthError(htmlMsg) {
-      const el = document.getElementById('authAlert');
-      el.innerHTML = htmlMsg;
-      el.classList.remove('hidden');
-    }
-
-    function handleClientLogin(e) {
-      e.preventDefault();
-      document.getElementById('authAlert').classList.add('hidden');
-
-      const nom = normalizeText(document.getElementById('loginNom').value);
-      const prenom = normalizeText(document.getElementById('loginPrenom').value);
-      const phone = normalizeText(document.getElementById('loginPhone').value);
-      const inputCode = normalizeCode(document.getElementById('loginCode').value);
-
-      if (!nom || !prenom || !phone || !inputCode) {
-        showAuthError('Veuillez remplir tous les champs obligatoires.');
-        return;
-      }
-
-      const fullName = formatNomPrenom(nom, prenom);
-      const cleanPhone = normalizePhone(phone);
-      const codes = getCodes();
-      const idx = codes.findIndex(c => normalizeCode(c.code) === inputCode);
-
-      if (idx === -1) {
-        showAuthError('Code d’accès invalide ou inexistant. Contactez le support sur <a href="https://wa.me/22676792548" target="_blank" rel="noopener">WhatsApp (+226 76 79 25 48)</a>.');
-        return;
-      }
-
-      const record = codes[idx];
-      const now = Date.now();
-
-      if (!record.activatedAt) {
-        record.activatedAt = now;
-        record.expiresAt = now + DAY_MS;
-        record.clientNom = nom.toUpperCase();
-        record.clientPrenom = prenom;
-        record.clientFullName = fullName;
-        record.clientPhone = phone;
-        codes[idx] = record;
-        saveCodes(codes);
-      } else {
-        const sameIdentity = record.clientFullName === fullName && normalizePhone(record.clientPhone) === cleanPhone;
-        if (!sameIdentity) {
-          showAuthError('Accès refusé : ce code est déjà attribué à un autre client (règle 1 code = 1 client). Obtenez votre propre code via <a href="https://wa.me/22676792548" target="_blank" rel="noopener">WhatsApp (+226 76 79 25 48)</a>.');
-          return;
-        }
-        if (now >= record.expiresAt) {
-          showAuthError('Votre accès de 24 heures pour ce code a expiré. Demandez un renouvellement ou un nouveau code sur <a href="https://wa.me/22676792548" target="_blank" rel="noopener">WhatsApp (+226 76 79 25 48)</a>.');
-          return;
-        }
-      }
-
-      const session = {
-        code: record.code,
-        fullName: record.clientFullName,
-        phone: record.clientPhone,
-        expiresAt: record.expiresAt
-      };
-      localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(session));
-      startClientEditor(session);
-    }
-
-    function getActiveSession() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEYS.SESSION);
-        return raw ? JSON.parse(raw) : null;
-      } catch {
-        return null;
-      }
-    }
-
-    function logoutClient() {
-      localStorage.removeItem(STORAGE_KEYS.SESSION);
-      if (sessionInterval) clearInterval(sessionInterval);
-      restoreAppState();
-    }
-
-    function checkSessionValidity() {
-      const session = getActiveSession();
-      if (!session) return false;
-
-      const codes = getCodes();
-      const record = codes.find(c => normalizeCode(c.code) === normalizeCode(session.code));
-      const now = Date.now();
-
-      if (!record || !record.expiresAt || now >= record.expiresAt) {
-        localStorage.removeItem(STORAGE_KEYS.SESSION);
-        if (sessionInterval) clearInterval(sessionInterval);
-        restoreAppState();
-        showAuthError('Votre session de 24 heures a expiré ou votre code a été révoqué. Contactez <a href="https://wa.me/22676792548" target="_blank" rel="noopener">WhatsApp (+226 76 79 25 48)</a>.');
-        return false;
-      }
-
-      session.expiresAt = record.expiresAt;
-      localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(session));
-      document.getElementById('bannerTimer').textContent = formatRemaining(record.expiresAt - now);
-      return true;
-    }
-
-    function startClientEditor(session) {
-      loadSavedCV();
-      cvState.fullName = session.fullName;
-      if (!cvState.phone) cvState.phone = session.phone;
-
-      document.getElementById('authScreen').classList.add('hidden');
-      document.getElementById('adminScreen').classList.add('hidden');
-      document.getElementById('editorScreen').classList.remove('hidden');
-      document.getElementById('sessionBanner').classList.remove('hidden');
-      document.getElementById('btnPreviewTop').classList.remove('hidden');
-      document.getElementById('btnDownloadPdfTop').classList.remove('hidden');
-      document.getElementById('btnPrintTop').classList.remove('hidden');
-      document.getElementById('btnLogoutClient').classList.remove('hidden');
-
-      document.getElementById('bannerClientName').textContent = session.fullName;
-      document.getElementById('bannerPhone').textContent = session.phone;
-      document.getElementById('cvFullName').value = session.fullName;
-
-      syncFormFromState();
-      renderRepeaters();
-      updateSummaryBadge();
-      updateCV();
-
-      checkSessionValidity();
-      if (sessionInterval) clearInterval(sessionInterval);
-      sessionInterval = setInterval(checkSessionValidity, 15000);
-    }
-
-    function restoreAppState() {
-      const session = getActiveSession();
-      if (session && checkSessionValidity()) {
-        startClientEditor(session);
-      } else {
-        document.getElementById('editorScreen').classList.add('hidden');
-        document.getElementById('sessionBanner').classList.add('hidden');
-        document.getElementById('btnPreviewTop').classList.add('hidden');
-        document.getElementById('btnDownloadPdfTop').classList.add('hidden');
-        document.getElementById('btnPrintTop').classList.add('hidden');
-        document.getElementById('btnLogoutClient').classList.add('hidden');
-        document.getElementById('adminScreen').classList.add('hidden');
-        document.getElementById('authScreen').classList.remove('hidden');
-      }
-    }
-
-    function loadSavedCV() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEYS.CV_DATA);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          cvState = { ...cvState, ...parsed };
-        }
-      } catch {}
-    }
-
-    function saveCVData() {
-      localStorage.setItem(STORAGE_KEYS.CV_DATA, JSON.stringify(cvState));
-    }
-
-    function syncFormFromState() {
-      document.getElementById('cvTemplate').value = cvState.template;
-      document.getElementById('showPhoto').checked = cvState.showPhoto;
-      document.getElementById('cvFullName').value = cvState.fullName;
-      document.getElementById('cvJobTitle').value = cvState.jobTitle;
-      document.getElementById('cvPhone').value = cvState.phone;
-      document.getElementById('cvEmail').value = cvState.email;
-      document.getElementById('cvAddress').value = cvState.address;
-      document.getElementById('cvExtraInfo').value = cvState.extraInfo;
-      document.getElementById('cvSummary').value = cvState.summary;
-      document.getElementById('autoSummarySync').checked = cvState.autoSummarySync !== false;
-      document.getElementById('cvSkills').value = cvState.skills;
-      document.getElementById('cvLanguages').value = cvState.languages;
-      document.getElementById('cvInterests').value = cvState.interests;
-
-      document.documentElement.style.setProperty('--primary', cvState.primaryColor);
-      document.documentElement.style.setProperty('--primary-light', cvState.lightColor);
-      document.querySelectorAll('.swatch').forEach(sw => {
-        sw.classList.toggle('active', sw.dataset.color === cvState.primaryColor);
-      });
-    }
-
-    function selectColor(btn) {
-      cvState.primaryColor = btn.dataset.color;
-      cvState.lightColor = btn.dataset.light;
-      document.documentElement.style.setProperty('--primary', cvState.primaryColor);
-      document.documentElement.style.setProperty('--primary-light', cvState.lightColor);
-      document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-      btn.classList.add('active');
+    function selectColor(color, el) {
+      selectedColor = color;
+      document.documentElement.style.setProperty('--primary', color);
+      document.querySelectorAll('#colorSwatches .swatch').forEach(s => s.classList.remove('active'));
+      if (el) el.classList.add('active');
       updateCV();
     }
 
     function handlePhotoUpload(e) {
-      const file = e.target.files?.[0];
+      const file = e.target.files && e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = () => {
-        cvState.photo = reader.result;
-        cvState.showPhoto = true;
-        document.getElementById('showPhoto').checked = true;
+      reader.onload = function(evt) {
+        photoDataUrl = evt.target.result || '';
         updateCV();
       };
       reader.readAsDataURL(file);
     }
 
-    function removePhoto() {
-      cvState.photo = '';
-      document.getElementById('photoInput').value = '';
+    function addExperience(silent = false, data = {}) {
+      experiences.push({
+        poste: data.poste || '',
+        entreprise: data.entreprise || '',
+        periode: data.periode || '',
+        description: data.description || ''
+      });
+      renderExperiencesForm();
+      if (!silent) updateCV();
+    }
+
+    function removeExperience(index) {
+      experiences.splice(index, 1);
+      renderExperiencesForm();
       updateCV();
     }
 
-    function addRepeater(type) {
-      if (type === 'exp') cvState.experiences.push({ role: '', company: '', period: '', desc: '' });
-      if (type === 'edu') cvState.educations.push({ degree: '', school: '', year: '', desc: '' });
-      if (type === 'ref') cvState.references.push({ name: '', role: '' });
-      renderRepeaters();
-      onProfileInputChanged();
-    }
-
-    function removeRepeater(type, index) {
-      if (type === 'exp') cvState.experiences.splice(index, 1);
-      if (type === 'edu') cvState.educations.splice(index, 1);
-      if (type === 'ref') cvState.references.splice(index, 1);
-      renderRepeaters();
-      onProfileInputChanged();
-    }
-
-    function updateRepeaterField(type, index, field, value) {
-      if (type === 'exp') cvState.experiences[index][field] = value;
-      if (type === 'edu') cvState.educations[index][field] = value;
-      if (type === 'ref') cvState.references[index][field] = value;
-      onProfileInputChanged();
-    }
-
-    function renderRepeaters() {
-      const expEl = document.getElementById('expList');
-      expEl.innerHTML = cvState.experiences.map((item, i) => `
+    function renderExperiencesForm() {
+      const wrap = document.getElementById('experiencesList');
+      wrap.innerHTML = experiences.map((exp, i) => `
         <div class="repeater-item">
           <div class="repeater-header">
             <span>Expérience #${i + 1}</span>
-            <button type="button" class="btn btn-danger btn-sm" onclick="removeRepeater('exp', ${i})">Retirer</button>
+            ${experiences.length > 1 ? `<button type="button" class="btn btn-danger btn-sm" onclick="removeExperience(${i})">Supprimer</button>` : ''}
           </div>
           <div class="form-group">
-            <input type="text" class="form-control" placeholder="Intitulé du poste" value="${escapeAttr(item.role)}" oninput="updateRepeaterField('exp', ${i}, 'role', this.value)" />
+            <label>Poste occupé</label>
+            <input type="text" class="form-control" value="${escapeAttr(exp.poste)}" placeholder="Ex : Responsable Administratif" oninput="experiences[${i}].poste=this.value; updateCV();" />
           </div>
           <div class="grid-2">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Entreprise / Structure" value="${escapeAttr(item.company)}" oninput="updateRepeaterField('exp', ${i}, 'company', this.value)" />
+              <label>Entreprise / Organisation</label>
+              <input type="text" class="form-control" value="${escapeAttr(exp.entreprise)}" placeholder="Ex : Cabinet Horizon" oninput="experiences[${i}].entreprise=this.value; updateCV();" />
             </div>
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Période (ex: 2022 - Présent)" value="${escapeAttr(item.period)}" oninput="updateRepeaterField('exp', ${i}, 'period', this.value)" />
+              <label>Période</label>
+              <input type="text" class="form-control" value="${escapeAttr(exp.periode)}" placeholder="Ex : 2023 - 2026" oninput="experiences[${i}].periode=this.value; updateCV();" />
             </div>
           </div>
-          <textarea rows="2" class="form-control" placeholder="Missions principales et réalisations..." oninput="updateRepeaterField('exp', ${i}, 'desc', this.value)">${escapeHtml(item.desc)}</textarea>
-        </div>
-      `).join('');
-
-      const eduEl = document.getElementById('eduList');
-      eduEl.innerHTML = cvState.educations.map((item, i) => `
-        <div class="repeater-item">
-          <div class="repeater-header">
-            <span>Formation #${i + 1}</span>
-            <button type="button" class="btn btn-danger btn-sm" onclick="removeRepeater('edu', ${i})">Retirer</button>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" placeholder="Diplôme / Formation" value="${escapeAttr(item.degree)}" oninput="updateRepeaterField('edu', ${i}, 'degree', this.value)" />
-          </div>
-          <div class="grid-2">
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Établissement / Université" value="${escapeAttr(item.school)}" oninput="updateRepeaterField('edu', ${i}, 'school', this.value)" />
-            </div>
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Année" value="${escapeAttr(item.year)}" oninput="updateRepeaterField('edu', ${i}, 'year', this.value)" />
-            </div>
-          </div>
-          <input type="text" class="form-control" placeholder="Option ou précision (optionnel)" value="${escapeAttr(item.desc)}" oninput="updateRepeaterField('edu', ${i}, 'desc', this.value)" />
-        </div>
-      `).join('');
-
-      const refEl = document.getElementById('refList');
-      refEl.innerHTML = cvState.references.map((item, i) => `
-        <div class="repeater-item">
-          <div class="repeater-header">
-            <span>Référence #${i + 1}</span>
-            <button type="button" class="btn btn-danger btn-sm" onclick="removeRepeater('ref', ${i})">Retirer</button>
-          </div>
-          <div class="grid-2">
-            <input type="text" class="form-control" placeholder="Nom complet ou mention" value="${escapeAttr(item.name)}" oninput="updateRepeaterField('ref', ${i}, 'name', this.value)" />
-            <input type="text" class="form-control" placeholder="Fonction & Contact" value="${escapeAttr(item.role)}" oninput="updateRepeaterField('ref', ${i}, 'role', this.value)" />
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Missions & réalisations</label>
+            <textarea class="form-control" rows="2" placeholder="Décrivez vos missions principales..." oninput="experiences[${i}].description=this.value; updateCV();">${escapeHtml(exp.description)}</textarea>
           </div>
         </div>
       `).join('');
     }
 
-    function resetCVFields() {
-      if (!confirm('Voulez-vous effacer le contenu saisi (votre identité verrouillée sera conservée) ?')) return;
-      const lockedName = cvState.fullName;
-      cvState.jobTitle = '';
-      cvState.email = '';
-      cvState.address = '';
-      cvState.extraInfo = '';
-      cvState.summary = '';
-      cvState.summaryCustomized = false;
-      cvState.experiences = [];
-      cvState.educations = [];
-      cvState.skills = '';
-      cvState.languages = '';
-      cvState.interests = '';
-      cvState.references = [];
-      cvState.fullName = lockedName;
-      syncFormFromState();
-      renderRepeaters();
-      updateSummaryBadge();
+    function addEducation(silent = false, data = {}) {
+      educations.push({
+        diplome: data.diplome || '',
+        etablissement: data.etablissement || '',
+        annee: data.annee || ''
+      });
+      renderEducationsForm();
+      if (!silent) updateCV();
+    }
+
+    function removeEducation(index) {
+      educations.splice(index, 1);
+      renderEducationsForm();
       updateCV();
+    }
+
+    function renderEducationsForm() {
+      const wrap = document.getElementById('educationsList');
+      wrap.innerHTML = educations.map((ed, i) => `
+        <div class="repeater-item">
+          <div class="repeater-header">
+            <span>Formation #${i + 1}</span>
+            ${educations.length > 1 ? `<button type="button" class="btn btn-danger btn-sm" onclick="removeEducation(${i})">Supprimer</button>` : ''}
+          </div>
+          <div class="form-group">
+            <label>Diplôme / Certification</label>
+            <input type="text" class="form-control" value="${escapeAttr(ed.diplome)}" placeholder="Ex : Licence en Gestion" oninput="educations[${i}].diplome=this.value; updateCV();" />
+          </div>
+          <div class="grid-2" style="margin-bottom:0;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Établissement</label>
+              <input type="text" class="form-control" value="${escapeAttr(ed.etablissement)}" placeholder="Ex : Université Nazi Boni" oninput="educations[${i}].etablissement=this.value; updateCV();" />
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Année</label>
+              <input type="text" class="form-control" value="${escapeAttr(ed.annee)}" placeholder="Ex : 2022" oninput="educations[${i}].annee=this.value; updateCV();" />
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addReference(silent = false, data = {}) {
+      referencesList.push({
+        nom: data.nom || '',
+        fonction: data.fonction || '',
+        contact: data.contact || ''
+      });
+      renderReferencesForm();
+      if (!silent) updateCV();
+    }
+
+    function removeReference(index) {
+      referencesList.splice(index, 1);
+      renderReferencesForm();
+      updateCV();
+    }
+
+    function renderReferencesForm() {
+      const wrap = document.getElementById('referencesList');
+      wrap.innerHTML = referencesList.map((ref, i) => `
+        <div class="repeater-item">
+          <div class="repeater-header">
+            <span>Référence #${i + 1}</span>
+            ${referencesList.length > 1 ? `<button type="button" class="btn btn-danger btn-sm" onclick="removeReference(${i})">Supprimer</button>` : ''}
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Nom & Prénom</label>
+              <input type="text" class="form-control" value="${escapeAttr(ref.nom)}" placeholder="Ex : Moussa Traoré" oninput="referencesList[${i}].nom=this.value; updateCV();" />
+            </div>
+            <div class="form-group">
+              <label>Fonction / Organisation</label>
+              <input type="text" class="form-control" value="${escapeAttr(ref.fonction)}" placeholder="Ex : Directeur des Opérations" oninput="referencesList[${i}].fonction=this.value; updateCV();" />
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Téléphone / Email</label>
+            <input type="text" class="form-control" value="${escapeAttr(ref.contact)}" placeholder="Ex : +226 70 11 22 33" oninput="referencesList[${i}].contact=this.value; updateCV();" />
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function fillSampleCV() {
+      document.getElementById('cvTitre').value = 'Coordinateur Administratif & Suivi-Évaluation';
+      document.getElementById('cvTel').value = currentSession ? currentSession.phone : '+226 70 45 82 19';
+      document.getElementById('cvEmail').value = 'contact.professionnel@exemple.com';
+      document.getElementById('cvVille').value = 'Bobo-Dioulasso, Burkina Faso';
+      document.getElementById('cvResume').value = 'Professionnel rigoureux et orienté résultats, doté d’une solide expérience en gestion administrative, coordination d’équipe et suivi de projets. Reconnu pour sa capacité à structurer les opérations et produire des rapports fiables.';
+      document.getElementById('cvSkills').value = 'Gestion administrative, Suivi-évaluation, Excel & Tableaux de bord, Rédaction de rapports, Travail en équipe';
+      document.getElementById('cvLanguages').value = 'Français (Courant), Anglais (Professionnel), Dioula';
+
+      experiences = [
+        {
+          poste: 'Chargé Administratif et Financier',
+          entreprise: 'Cabinet Conseil & Développement',
+          periode: '2024 - 2026',
+          description: 'Supervision des dossiers administratifs, suivi budgétaire mensuel et coordination des prestataires.'
+        },
+        {
+          poste: 'Assistant de Projet',
+          entreprise: 'ONG Actions Durables',
+          periode: '2022 - 2024',
+          description: 'Collecte de données terrain, organisation d’ateliers et rédaction des bilans trimestriels.'
+        }
+      ];
+      educations = [
+        {
+          diplome: 'Master en Management des Organisations',
+          etablissement: 'Institut Supérieur de Gestion',
+          annee: '2022'
+        }
+      ];
+      referencesList = [
+        {
+          nom: 'Moussa Sawadogo',
+          fonction: 'Chef de Projet — ONG Actions Durables',
+          contact: '+226 76 12 34 56'
+        }
+      ];
+
+      renderExperiencesForm();
+      renderEducationsForm();
+      renderReferencesForm();
+      updateCV();
+    }
+
+    function splitTags(str) {
+      return String(str || '')
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
+    }
+
+    function updateCV() {
+      const tpl = document.getElementById('cvTemplate').value || 'tpl-cabinet-left';
+      const nom = document.getElementById('cvNom').value.trim().toUpperCase();
+      const prenom = document.getElementById('cvPrenom').value.trim();
+      const fullName = formatIdentity(nom, prenom) || 'NOM Prénom';
+      const titre = document.getElementById('cvTitre').value.trim() || 'Titre professionnel';
+      const tel = document.getElementById('cvTel').value.trim();
+      const email = document.getElementById('cvEmail').value.trim();
+      const ville = document.getElementById('cvVille').value.trim();
+      const resume = document.getElementById('cvResume').value.trim();
+      const skills = splitTags(document.getElementById('cvSkills').value);
+      const langs = splitTags(document.getElementById('cvLanguages').value);
+
+      const photoHtml = photoDataUrl
+        ? `<img src="${photoDataUrl}" alt="Photo" class="cv-photo" />`
+        : `<div class="cv-photo" style="display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;color:#475569;">${escapeHtml((nom[0] || '') + (prenom[0] || '') || 'CV')}</div>`;
+
+      const expHtml = experiences.filter(e => e.poste || e.entreprise || e.description).map(e => `
+        <div class="cv-entry">
+          <div class="cv-entry-top">
+            <span>${escapeHtml(e.poste || 'Poste')}</span>
+            <span style="font-size:0.78rem; color:#475569;">${escapeHtml(e.periode || '')}</span>
+          </div>
+          ${e.entreprise ? `<div class="cv-entry-sub">${escapeHtml(e.entreprise)}</div>` : ''}
+          ${e.description ? `<div class="cv-entry-desc">${escapeHtml(e.description)}</div>` : ''}
+        </div>
+      `).join('');
+
+      const eduHtml = educations.filter(ed => ed.diplome || ed.etablissement).map(ed => `
+        <div class="cv-entry">
+          <div class="cv-entry-top">
+            <span>${escapeHtml(ed.diplome || 'Diplôme')}</span>
+            <span style="font-size:0.78rem; color:#475569;">${escapeHtml(ed.annee || '')}</span>
+          </div>
+          ${ed.etablissement ? `<div class="cv-entry-sub">${escapeHtml(ed.etablissement)}</div>` : ''}
+        </div>
+      `).join('');
+
+      const refHtml = referencesList.filter(r => r.nom || r.fonction || r.contact).map(r => `
+        <li style="margin-bottom:6px;">
+          <strong>${escapeHtml(r.nom || '')}</strong>
+          ${r.fonction ? `<div style="font-size:0.76rem; color:#475569;">${escapeHtml(r.fonction)}</div>` : ''}
+          ${r.contact ? `<div style="font-size:0.76rem;">${escapeHtml(r.contact)}</div>` : ''}
+        </li>
+      `).join('');
+
+      const skillsHtml = skills.map(s => `<span class="cv-tag">${escapeHtml(s)}</span>`).join('');
+      const langsHtml = langs.map(l => `<span class="cv-tag">${escapeHtml(l)}</span>`).join('');
+
+      const contactItems = [
+        tel ? `<div>Tél : ${escapeHtml(tel)}</div>` : '',
+        email ? `<div>Email : ${escapeHtml(email)}</div>` : '',
+        ville ? `<div>Lieu : ${escapeHtml(ville)}</div>` : ''
+      ].filter(Boolean).join('');
+
+      let inner = '';
+
+      if (tpl === 'tpl-sommet-executif') {
+        inner = `
+          <div class="tpl-sommet-executif">
+            <div class="cv-exec-banner">
+              <div style="flex:1; min-width:0;">
+                <div class="cv-name">${escapeHtml(fullName)}</div>
+                <div class="cv-title">${escapeHtml(titre)}</div>
+                <div class="cv-exec-meta">${contactItems}</div>
+              </div>
+              ${photoHtml}
+            </div>
+            <div class="cv-exec-body">
+              <div class="cv-kpi-strip">
+                <div class="cv-kpi-box"><div class="cv-kpi-label">Expériences</div><div class="cv-kpi-val">${experiences.filter(x=>x.poste||x.entreprise).length} poste(s)</div></div>
+                <div class="cv-kpi-box"><div class="cv-kpi-label">Compétences</div><div class="cv-kpi-val">${skills.length} compétence(s)</div></div>
+                <div class="cv-kpi-box"><div class="cv-kpi-label">Langues</div><div class="cv-kpi-val">${langs.length} langue(s)</div></div>
+              </div>
+              ${resume ? `<div class="cv-section"><div class="cv-section-heading">Profil professionnel</div><div class="cv-entry-desc">${escapeHtml(resume)}</div></div>` : ''}
+              ${expHtml ? `<div class="cv-section"><div class="cv-section-heading">Expériences professionnelles</div>${expHtml}</div>` : ''}
+              ${eduHtml ? `<div class="cv-section"><div class="cv-section-heading">Formations</div>${eduHtml}</div>` : ''}
+              <div class="grid-2" style="gap:16px;">
+                ${skillsHtml ? `<div class="cv-section"><div class="cv-section-heading">Compétences</div><div class="cv-tags">${skillsHtml}</div></div>` : ''}
+                ${langsHtml ? `<div class="cv-section"><div class="cv-section-heading">Langues</div><div class="cv-tags">${langsHtml}</div></div>` : ''}
+              </div>
+              ${refHtml ? `<div class="cv-section"><div class="cv-section-heading">Personnes ressources</div><ul class="cv-list-clean">${refHtml}</ul></div>` : ''}
+            </div>
+          </div>`;
+      } else if (tpl === 'tpl-horizon-asym') {
+        inner = `
+          <div class="tpl-horizon-asym">
+            <div class="cv-main-col">
+              <div class="cv-name">${escapeHtml(fullName)}</div>
+              <div class="cv-title">${escapeHtml(titre)}</div>
+              ${resume ? `<div class="cv-section"><div class="cv-section-heading">Profil</div><div class="cv-entry-desc">${escapeHtml(resume)}</div></div>` : ''}
+              ${expHtml ? `<div class="cv-section"><div class="cv-section-heading">Expériences</div>${expHtml}</div>` : ''}
+              ${eduHtml ? `<div class="cv-section"><div class="cv-section-heading">Formations</div>${eduHtml}</div>` : ''}
+            </div>
+            <aside class="cv-side-col">
+              <div style="display:flex; justify-content:center; margin-bottom:14px;">${photoHtml}</div>
+              <div class="cv-section"><div class="cv-section-heading">Contact</div><div class="cv-side-contact">${contactItems}</div></div>
+              ${skillsHtml ? `<div class="cv-section"><div class="cv-section-heading">Compétences</div><div class="cv-tags">${skillsHtml}</div></div>` : ''}
+              ${langsHtml ? `<div class="cv-section"><div class="cv-section-heading">Langues</div><div class="cv-tags">${langsHtml}</div></div>` : ''}
+              ${refHtml ? `<div class="cv-section"><div class="cv-section-heading">Références</div><ul class="cv-list-clean">${refHtml}</ul></div>` : ''}
+            </aside>
+          </div>`;
+      } else if (tpl === 'tpl-grille-dir') {
+        inner = `
+          <div class="tpl-grille-dir">
+            <div class="cv-grid-top">
+              <div>
+                <div class="cv-name">${escapeHtml(fullName)}</div>
+                <div class="cv-title">${escapeHtml(titre)}</div>
+                <div class="cv-contact-grid">${contactItems}</div>
+              </div>
+              ${photoHtml}
+            </div>
+            <div class="cv-bento-2">
+              <div>
+                ${resume ? `<div class="cv-box-card"><div class="cv-section-heading">Profil</div><div class="cv-entry-desc">${escapeHtml(resume)}</div></div>` : ''}
+                ${expHtml ? `<div class="cv-box-card"><div class="cv-section-heading">Expériences</div>${expHtml}</div>` : ''}
+              </div>
+              <div>
+                ${eduHtml ? `<div class="cv-box-card"><div class="cv-section-heading">Formations</div>${eduHtml}</div>` : ''}
+                ${skillsHtml ? `<div class="cv-box-card"><div class="cv-section-heading">Compétences</div><div class="cv-tags">${skillsHtml}</div></div>` : ''}
+                ${langsHtml ? `<div class="cv-box-card"><div class="cv-section-heading">Langues</div><div class="cv-tags">${langsHtml}</div></div>` : ''}
+                ${refHtml ? `<div class="cv-box-card"><div class="cv-section-heading">Références</div><ul class="cv-list-clean">${refHtml}</ul></div>` : ''}
+              </div>
+            </div>
+          </div>`;
+      } else if (tpl === 'tpl-epure-suisse') {
+        inner = `
+          <div class="tpl-epure-suisse">
+            <div class="cv-swiss-header">
+              <div style="flex:1; min-width:0;">
+                <div class="cv-name">${escapeHtml(fullName)}</div>
+                <div class="cv-title">${escapeHtml(titre)}</div>
+                <div class="cv-swiss-contact">${contactItems}</div>
+              </div>
+              ${photoHtml}
+            </div>
+            ${resume ? `<div class="cv-section"><div class="cv-section-heading">Profil</div><div class="cv-entry-desc">${escapeHtml(resume)}</div></div>` : ''}
+            ${expHtml ? `<div class="cv-section"><div class="cv-section-heading">Expériences professionnelles</div>${expHtml}</div>` : ''}
+            ${eduHtml ? `<div class="cv-section"><div class="cv-section-heading">Formations</div>${eduHtml}</div>` : ''}
+            <div class="grid-2" style="gap:16px;">
+              ${skillsHtml ? `<div class="cv-section"><div class="cv-section-heading">Compétences</div><div class="cv-tags">${skillsHtml}</div></div>` : ''}
+              ${langsHtml ? `<div class="cv-section"><div class="cv-section-heading">Langues</div><div class="cv-tags">${langsHtml}</div></div>` : ''}
+            </div>
+            ${refHtml ? `<div class="cv-section"><div class="cv-section-heading">Personnes ressources</div><ul class="cv-list-clean">${refHtml}</ul></div>` : ''}
+          </div>`;
+      } else {
+        inner = `
+          <div class="tpl-cabinet-left">
+            <aside class="cv-left">
+              <div style="display:flex; justify-content:center; margin-bottom:14px;">${photoHtml}</div>
+              <div class="cv-section">
+                <div class="cv-section-heading">Contact</div>
+                <div class="cv-left-contact">${contactItems}</div>
+              </div>
+              ${skillsHtml ? `<div class="cv-section"><div class="cv-section-heading">Compétences</div><div class="cv-tags">${skillsHtml}</div></div>` : ''}
+              ${langsHtml ? `<div class="cv-section"><div class="cv-section-heading">Langues</div><div class="cv-tags">${langsHtml}</div></div>` : ''}
+              ${refHtml ? `<div class="cv-section"><div class="cv-section-heading">Références</div><ul class="cv-list-clean">${refHtml}</ul></div>` : ''}
+            </aside>
+            <div class="cv-right">
+              <div class="cv-hero-header">
+                <div class="cv-name">${escapeHtml(fullName)}</div>
+                <div class="cv-title">${escapeHtml(titre)}</div>
+              </div>
+              ${resume ? `<div class="cv-section"><div class="cv-section-heading">Profil professionnel</div><div class="cv-entry-desc">${escapeHtml(resume)}</div></div>` : ''}
+              ${expHtml ? `<div class="cv-section"><div class="cv-section-heading">Expériences professionnelles</div>${expHtml}</div>` : ''}
+              ${eduHtml ? `<div class="cv-section"><div class="cv-section-heading">Formations & Diplômes</div>${eduHtml}</div>` : ''}
+            </div>
+          </div>`;
+      }
+
+      document.getElementById('cvPreviewPage').innerHTML = inner;
+    }
+
+    function printCV() {
+      window.print();
+    }
+
+    async function downloadPdfCV() {
+      const pageEl = document.getElementById('cvPreviewPage');
+      if (!pageEl || !window.html2canvas || !window.jspdf) {
+        window.print();
+        return;
+      }
+      try {
+        const canvas = await html2canvas(pageEl, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff'
+        });
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        if (pdfHeight <= pdf.internal.pageSize.getHeight()) {
+          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        } else {
+          let heightLeft = pdfHeight;
+          let position = 0;
+          const pageHeight = pdf.internal.pageSize.getHeight();
+          pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+          heightLeft -= pageHeight;
+          while (heightLeft > 0) {
+            position = heightLeft - pdfHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+            heightLeft -= pageHeight;
+          }
+        }
+
+        const safeName = (currentSession && currentSession.fullName ? currentSession.fullName : 'CV')
+          .replace(/[^a-zA-Z0-9_-]+/g, '_');
+        pdf.save('CV_' + safeName + '.pdf');
+      } catch (err) {
+        window.print();
+      }
     }
 
     function escapeHtml(str) {
       return String(str || '')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
     }
 
     function escapeAttr(str) {
-      return escapeHtml(str).replace(/"/g, '&quot;');
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
     }
 
-    function splitTags(str) {
-      return String(str || '').split(',').map(s => s.trim()).filter(Boolean);
-    }
+    // Boot
+    (function init() {
+      codesCache = loadLocalCodes();
+      try {
+        const savedSession = localStorage.getItem(STORAGE_KEYS.SESSION);
+        if (savedSession) {
+          const parsed = JSON.parse(savedSession);
+          if (parsed && parsed.expiresAt && Date.now() < Number(parsed.expiresAt)) {
+            activateSession(parsed);
+          } else {
+            localStorage.removeItem(STORAGE_KEYS.SESSION);
+          }
+        }
+      } catch (e) {}
 
-    function cleanExtraLabel(val) {
-      return String(val || '').trim();
-    }
-
-    function updateCV() {
-      const session = getActiveSession();
-      if (session) {
-        cvState.fullName = session.fullName;
-        document.getElementById('cvFullName').value = session.fullName;
-      }
-
-      cvState.template = document.getElementById('cvTemplate').value;
-      cvState.showPhoto = document.getElementById('showPhoto').checked;
-      cvState.jobTitle = document.getElementById('cvJobTitle').value;
-      cvState.phone = document.getElementById('cvPhone').value;
-      cvState.email = document.getElementById('cvEmail').value;
-      cvState.address = document.getElementById('cvAddress').value;
-      cvState.extraInfo = document.getElementById('cvExtraInfo').value;
-      cvState.summary = document.getElementById('cvSummary').value;
-      cvState.skills = document.getElementById('cvSkills').value;
-      cvState.languages = document.getElementById('cvLanguages').value;
-      cvState.interests = document.getElementById('cvInterests').value;
-
-      saveCVData();
-
-      const preview = document.getElementById('cvPreview');
-      preview.className = `a4-page ${cvState.template}`;
-
-      const photoHtml = (cvState.showPhoto && cvState.photo)
-        ? `<img src="${cvState.photo}" alt="Photo" class="cv-photo" />`
-        : '';
-
-      const cleanExtra = cleanExtraLabel(cvState.extraInfo);
-      const contacts = [
-        cvState.phone ? escapeHtml(cvState.phone) : '',
-        cvState.email ? escapeHtml(cvState.email) : '',
-        cvState.address ? escapeHtml(cvState.address) : '',
-        cleanExtra ? escapeHtml(cleanExtra) : ''
-      ].filter(Boolean);
-
-      const summaryHtml = cvState.summary.trim() ? `
-        <div class="cv-section">
-          <div class="cv-section-heading">Profil Professionnel</div>
-          <div class="cv-entry-desc">${escapeHtml(cvState.summary)}</div>
-        </div>` : '';
-
-      const expHtml = cvState.experiences.some(e => e.role || e.company || e.desc) ? `
-        <div class="cv-section">
-          <div class="cv-section-heading">Expériences Professionnelles</div>
-          ${cvState.experiences.map(e => `
-            <div class="cv-entry">
-              <div class="cv-entry-top">
-                <span>${escapeHtml(e.role)}</span>
-                <span style="font-size:0.79rem; color:#64748b;">${escapeHtml(e.period)}</span>
-              </div>
-              <div class="cv-entry-sub">${escapeHtml(e.company)}</div>
-              <div class="cv-entry-desc">${escapeHtml(e.desc)}</div>
-            </div>
-          `).join('')}
-        </div>` : '';
-
-      const eduHtml = cvState.educations.some(e => e.degree || e.school) ? `
-        <div class="cv-section">
-          <div class="cv-section-heading">Formations & Diplômes</div>
-          ${cvState.educations.map(e => `
-            <div class="cv-entry">
-              <div class="cv-entry-top">
-                <span>${escapeHtml(e.degree)}</span>
-                <span style="font-size:0.79rem; color:#64748b;">${escapeHtml(e.year)}</span>
-              </div>
-              <div class="cv-entry-sub">${escapeHtml(e.school)}</div>
-              ${e.desc ? `<div class="cv-entry-desc">${escapeHtml(e.desc)}</div>` : ''}
-            </div>
-          `).join('')}
-        </div>` : '';
-
-      const skillsArr = splitTags(cvState.skills);
-      const skillsHtml = skillsArr.length ? `
-        <div class="cv-section">
-          <div class="cv-section-heading">Compétences</div>
-          <div class="cv-tags">${skillsArr.map(s => `<span class="cv-tag">${escapeHtml(s)}</span>`).join('')}</div>
-        </div>` : '';
-
-      const langsArr = splitTags(cvState.languages);
-      const langsHtml = langsArr.length ? `
-        <div class="cv-section">
-          <div class="cv-section-heading">Langues</div>
-          <ul class="cv-list-clean">${langsArr.map(l => `<li>${escapeHtml(l)}</li>`).join('')}</ul>
-        </div>` : '';
-
-      const intArr = splitTags(cvState.interests);
-      const intHtml = intArr.length ? `
-        <div class="cv-section">
-          <div class="cv-section-heading">Centres d'Intérêt</div>
-          <ul class="cv-list-clean">${intArr.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>
-        </div>` : '';
-
-      const refHtml = cvState.references.some(r => r.name || r.role) ? `
-        <div class="cv-section">
-          <div class="cv-section-heading">Personnes Ressources</div>
-          ${cvState.references.map(r => `
-            <div class="cv-entry">
-              <div class="cv-entry-top"><span>${escapeHtml(r.name)}</span></div>
-              <div class="cv-entry-desc">${escapeHtml(r.role)}</div>
-            </div>
-          `).join('')}
-        </div>` : '';
-
-      if (cvState.template === 'tpl-cabinet-left') {
-        preview.innerHTML = `
-          <div class="cv-left">
-            ${photoHtml ? `<div style="text-align:center; margin-bottom:14px;">${photoHtml}</div>` : ''}
-            <div class="cv-section">
-              <div class="cv-section-heading">Contact</div>
-              <div class="cv-left-contact">${contacts.map(c => `<div>${c}</div>`).join('')}</div>
-            </div>
-            ${skillsHtml}
-            ${langsHtml}
-            ${intHtml}
-          </div>
-          <div class="cv-right">
-            <div class="cv-hero-header">
-              <div class="cv-name">${escapeHtml(cvState.fullName)}</div>
-              <div class="cv-title">${escapeHtml(cvState.jobTitle)}</div>
-            </div>
-            ${summaryHtml}
-            ${expHtml}
-            ${eduHtml}
-            ${refHtml}
-          </div>
-        `;
-      } else if (cvState.template === 'tpl-sommet-executif') {
-        const latestExp = cvState.experiences.find(e => e.role || e.company);
-        const latestEdu = cvState.educations.find(e => e.degree || e.school);
-        preview.innerHTML = `
-          <div class="cv-exec-banner">
-            <div>
-              <div class="cv-name">${escapeHtml(cvState.fullName)}</div>
-              <div class="cv-title">${escapeHtml(cvState.jobTitle)}</div>
-              <div class="cv-exec-meta">${contacts.map(c => `<span>${c}</span>`).join('')}</div>
-            </div>
-            ${photoHtml}
-          </div>
-          <div class="cv-exec-body">
-            <div class="cv-kpi-strip">
-              <div class="cv-kpi-box">
-                <div class="cv-kpi-label">Poste clé</div>
-                <div class="cv-kpi-val">${escapeHtml(latestExp?.role || cvState.jobTitle || '—')}</div>
-              </div>
-              <div class="cv-kpi-box">
-                <div class="cv-kpi-label">Diplôme principal</div>
-                <div class="cv-kpi-val">${escapeHtml(latestEdu?.degree || '—')}</div>
-              </div>
-              <div class="cv-kpi-box">
-                <div class="cv-kpi-label">Localisation</div>
-                <div class="cv-kpi-val">${escapeHtml(cvState.address || '—')}</div>
-              </div>
-            </div>
-            ${summaryHtml}
-            ${expHtml}
-            ${eduHtml}
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px;">
-              <div>${skillsHtml}</div>
-              <div>${langsHtml}${intHtml}${refHtml}</div>
-            </div>
-          </div>
-        `;
-      } else if (cvState.template === 'tpl-horizon-asym') {
-        preview.innerHTML = `
-          <div class="cv-main-col">
-            <div class="cv-name">${escapeHtml(cvState.fullName)}</div>
-            <div class="cv-title">${escapeHtml(cvState.jobTitle)}</div>
-            ${summaryHtml}
-            ${expHtml}
-            ${eduHtml}
-          </div>
-          <div class="cv-side-col">
-            ${photoHtml ? `<div style="text-align:center; margin-bottom:14px;">${photoHtml}</div>` : ''}
-            <div class="cv-section">
-              <div class="cv-section-heading">Coordonnées</div>
-              <div class="cv-side-contact">${contacts.map(c => `<div>${c}</div>`).join('')}</div>
-            </div>
-            ${skillsHtml}
-            ${langsHtml}
-            ${intHtml}
-            ${refHtml}
-          </div>
-        `;
-      } else if (cvState.template === 'tpl-grille-dir') {
-        preview.innerHTML = `
-          <div class="cv-grid-top">
-            <div>
-              <div class="cv-name">${escapeHtml(cvState.fullName)}</div>
-              <div class="cv-title">${escapeHtml(cvState.jobTitle)}</div>
-              <div class="cv-contact-grid">${contacts.map(c => `<div>${c}</div>`).join('')}</div>
-            </div>
-            ${photoHtml}
-          </div>
-          <div class="cv-bento-2">
-            <div>
-              ${summaryHtml ? `<div class="cv-box-card">${summaryHtml}</div>` : ''}
-              ${expHtml ? `<div class="cv-box-card">${expHtml}</div>` : ''}
-              ${eduHtml ? `<div class="cv-box-card">${eduHtml}</div>` : ''}
-            </div>
-            <div>
-              ${skillsHtml ? `<div class="cv-box-card">${skillsHtml}</div>` : ''}
-              ${(langsHtml || intHtml) ? `<div class="cv-box-card">${langsHtml}${intHtml}</div>` : ''}
-              ${refHtml ? `<div class="cv-box-card">${refHtml}</div>` : ''}
-            </div>
-          </div>
-        `;
-      } else {
-        preview.innerHTML = `
-          <div class="cv-swiss-header">
-            <div>
-              <div class="cv-name">${escapeHtml(cvState.fullName)}</div>
-              <div class="cv-title">${escapeHtml(cvState.jobTitle)}</div>
-              <div class="cv-swiss-contact">${contacts.map(c => `<span>${c}</span>`).join('')}</div>
-            </div>
-            ${photoHtml}
-          </div>
-          ${summaryHtml}
-          ${expHtml}
-          ${eduHtml}
-          ${skillsHtml}
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px;">
-            <div>${langsHtml}${intHtml}</div>
-            <div>${refHtml}</div>
-          </div>
-        `;
-      }
-    }
-
-    restoreAppState();
+      setInterval(updateTimerBanner, 30000);
+    })();
   </script>
 </body>
 </html>
